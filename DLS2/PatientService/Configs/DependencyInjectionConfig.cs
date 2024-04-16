@@ -1,9 +1,9 @@
 ﻿using Monitoring;
 using OpenTelemetry.Trace;
+using PatientService.Core.Helper;
 using PatientService.Core.Repositories;
 using PatientService.Core.Repositories.Interfaces;
 using PatientService.Core.Services.Interfaces;
-using PatientService.Helper;
 
 namespace PatientService.Configs;
 
@@ -18,6 +18,10 @@ public static class DependencyInjectionConfig
         services.AddScoped<IPatientRepository, PatientRepository>();
         services.AddScoped<IPatientService, Core.Services.PatientService>();
 
+        //Automapper
+        services.AddSingleton(AutoMapperConfig.ConfigureAutomapper());
+        
+        //Tracing
         services.AddOpenTelemetry().Setup();
         services.AddSingleton(TracerProvider.Default.GetTracer("MyTracer"));
     }

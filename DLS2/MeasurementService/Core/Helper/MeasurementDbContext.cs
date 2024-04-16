@@ -1,31 +1,27 @@
 ﻿using MeasurementService.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace MeasurementService.Helper;
+namespace MeasurementService.Core.Helper;
 
 public class MeasurementDbContext : DbContext
 {
-    public MeasurementDbContext(DbContextOptions options) : base(options)
-    {
-    }
-    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //TODO FIX THIS CONNECTION STRING
-        optionsBuilder.UseSqlServer("Server=measurement-db;Database=MeasurementDb;User Id=sa;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;");        
+        optionsBuilder.UseSqlServer("Server=localhost,1438;Database=MeasurementDb;User Id=SA;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;");        
+        //optionsBuilder.UseSqlServer("Server=measurement-db;Database=MeasurementDb;User Id=SA;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;");        
     }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         #region Setup DB
+
         //Auto generate id
         modelBuilder.Entity<Measurement>()
-            .Property(m => m.Id)
+            .Property(p => p.Id)
             .ValueGeneratedOnAdd();
-        
-        #endregion
+
+        #endregion }
     }
 
     public DbSet<Measurement> Measurements { get; set; }
-
 }

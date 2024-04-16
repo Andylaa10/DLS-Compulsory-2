@@ -1,7 +1,7 @@
-﻿using MeasurementService.Core.Repositories;
+﻿using MeasurementService.Core.Helper;
+using MeasurementService.Core.Repositories;
 using MeasurementService.Core.Repositories.Interfaces;
 using MeasurementService.Core.Services.Interfaces;
-using MeasurementService.Helper;
 using Monitoring;
 using OpenTelemetry.Trace;
 
@@ -13,13 +13,15 @@ public static class DependencyInjectionConfig
     {
         //Database 
         services.AddDbContext<MeasurementDbContext>();
-        
+
         //DI 
         services.AddScoped<IMeasurementRepository, MeasurementRepository>();
         services.AddScoped<IMeasurementService, Core.Services.MeasurementService>();
-        
+
+        //Automapper
         services.AddSingleton(AutoMapperConfig.ConfigureAutomapper());
-        
+
+        //Tracing
         services.AddOpenTelemetry().Setup();
         services.AddSingleton(TracerProvider.Default.GetTracer("MyTracer"));
     }

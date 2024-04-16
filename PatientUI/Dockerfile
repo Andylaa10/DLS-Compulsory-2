@@ -1,6 +1,6 @@
 FROM node:20.1 as build
 WORKDIR /app
-COPY /Patient/package.json ./package.json
+COPY /PatientUI/package.json ./package.json
 RUN npm install
 RUN npm install -g @angular/cli
 COPY /PatientUI/ ./

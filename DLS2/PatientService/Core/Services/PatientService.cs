@@ -1,7 +1,9 @@
-﻿using Monitoring;
+﻿using AutoMapper;
+using Monitoring;
 using OpenTelemetry.Trace;
 using PatientService.Core.Entities;
 using PatientService.Core.Repositories.Interfaces;
+using PatientService.Core.Services.DTOs;
 using PatientService.Core.Services.Interfaces;
 
 namespace PatientService.Core.Services;
@@ -10,11 +12,13 @@ public class PatientService : IPatientService
 {
     private readonly IPatientRepository _patientRepository;
     private readonly Tracer _tracer;
+    private readonly IMapper _mapper;
 
-    public PatientService(IPatientRepository patientRepository, Tracer tracer)
+    public PatientService(IPatientRepository patientRepository, Tracer tracer, IMapper mapper)
     {
         _patientRepository = patientRepository;
         _tracer = tracer;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<Patient>> GetAllPatients()
@@ -44,13 +48,13 @@ public class PatientService : IPatientService
         await _patientRepository.DeletePatient(ssn);
     }
 
-    public async Task<Patient> CreatePatient(Patient patient)
+    public async Task<Patient> CreatePatient(CreatePatientDto patient)
     {
         using var activity = _tracer.StartActiveSpan("CreatePatient");
         
         Logging.Log.Information("Called CreatePatient function");
         
-        return await _patientRepository.CreatePatient(patient);
+        return await _patientRepository.CreatePatient(_mapper.Map<Patient>(patient));
     }
 
     public async Task RebuildDatabase()

@@ -1,5 +1,4 @@
-using MeasurementService.Core.DTOs;
-using MeasurementService.Core.Entities;
+using MeasurementService.Core.Services.DTOs;
 using MeasurementService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +33,7 @@ public class MeasurementController : ControllerBase
     
     [HttpPost]
     [Route("CreateMeasurement")]
-    public async Task<IActionResult> CreateMeasurement([FromBody] Measurement measurement)
+    public async Task<IActionResult> CreateMeasurement([FromBody] CreateMeasurementDto measurement)
     {
         try
         {
@@ -64,7 +63,7 @@ public class MeasurementController : ControllerBase
 
     [HttpPut]
     [Route("UpdateMeasurement/{id}")]
-    public async Task<IActionResult> UpdateMeasurement([FromRoute] int id, [FromBody] UpdateMeasurementDTO dto)
+    public async Task<IActionResult> UpdateMeasurement([FromRoute] int id, [FromBody] UpdateMeasurementDto dto)
     {
         try
         {

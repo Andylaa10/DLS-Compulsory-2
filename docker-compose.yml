@@ -1,16 +1,18 @@
 version: '3.8'
 services:
-  redis:
-    image: 'redislabs/redisearch:latest'
-    container_name: 'redis'
-    healthcheck:
-      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
-      interval: 1s
-      timeout: 3s
-      retries: 5
-    ports:
-      - '6379:6379'
-      
+#Cache
+#  redis:
+#    image: 'redislabs/redisearch:latest'
+#    container_name: 'redis'
+#    healthcheck:
+#      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+#      interval: 1s
+#      timeout: 3s
+#      retries: 5
+#    ports:
+#      - '6379:6379'
+
+#Database
   patient-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
@@ -22,31 +24,31 @@ services:
       - mssql_data_patient_db:/var/opt/mssql
     networks:
       - local_network
-      
+
   measurement-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       MSSQL_SA_PASSWORD: "SuperSecret7!"
       ACCEPT_EULA: "Y"
     ports:
-      - "1435:1433"
+      - "1438:1433"
     volumes:
       - mssql_data_measurement_db:/var/opt/mssql
     networks:
       - local_network
-      
+
+#Monitoring
   seq:
     image: datalust/seq:latest
     ports:
-      - "5341:5341"
-      - "5342:80"
+      - "5345:80"
     volumes:
       - seq_data:/data
     networks:
       - local_network
     environment:
       ACCEPT_EULA: "Y"
-      
+
   zipkin-storage:
     image: openzipkin/zipkin-mysql
     ports:
@@ -69,7 +71,8 @@ services:
       - zipkin-storage
     networks:
       - local_network
-      
+
+#APIS
   apigateway:
     image: apigateway
     build:
@@ -77,7 +80,7 @@ services:
       dockerfile: ./DLS2/APIGateway/Dockerfile
     ports:
       - '5206:80'
-  
+
   measurement-service:
     image: measurementservice
     build:
@@ -86,13 +89,13 @@ services:
     ports:
       - '9090:80'
     depends_on:
-      redis:
-        condition: service_healthy
+#      redis:
+#        condition: service_healthy
       measurement-db:
         condition: service_started
       apigateway:
         condition: service_started
-  
+
   patient-service:
     image: patientservice
     build:
@@ -100,17 +103,18 @@ services:
       dockerfile: ./DLS2/PatientService/Dockerfile
     ports:
       - '9092:80'
-    depends_on: 
-      redis:
-        condition: service_healthy
+    depends_on:
+#      redis:
+#        condition: service_healthy
       patient-db:
         condition: service_started
       apigateway:
         condition: service_started
 
+#Frontend
   doctor-ui:
     ports:
-      - '8080:80'
+      - '8082:80'
     build:
       context: .
       dockerfile: ./DoctorUI/Dockerfile
@@ -121,10 +125,10 @@ services:
     depends_on:
       - patient-service
       - measurement-service
-  
+
   patient-ui:
     ports:
-      - '8082:80'
+      - '8083:80'
     build:
       context: .
       dockerfile: ./PatientUI/Dockerfile
@@ -134,7 +138,7 @@ services:
       - local_network
     depends_on:
       - measurement-service
-      
+
 volumes:
   seq_data:
   zipkin_data:
