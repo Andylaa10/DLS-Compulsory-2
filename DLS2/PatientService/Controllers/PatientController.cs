@@ -29,7 +29,7 @@ public class PatientController : ControllerBase
     }
     
     [HttpGet]
-    [Route("/{ssn}")]
+    [Route("{ssn}")]
     public async Task<IActionResult> GetPatientBySsn([FromRoute] string ssn)
     {
         try
@@ -43,7 +43,7 @@ public class PatientController : ControllerBase
     }
     
     [HttpPost]
-    [Route("AddPatient")]
+    [Route("CreatePatient")]
     public async Task<IActionResult> AddPatient([FromBody] Patient patient)
     {
         try
@@ -58,7 +58,7 @@ public class PatientController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("DeletePatient/{{ssn}}")]
+    [Route("DeletePatient/{ssn}")]
     public async Task<IActionResult> DeletePatient([FromRoute] string ssn)
     {
         try
@@ -73,8 +73,8 @@ public class PatientController : ControllerBase
     }
     
     
-    [HttpGet]
-    [Route("/rebuild")]
+    [HttpPost]
+    [Route("RebuildDb")]
     public async Task<IActionResult> RebuildDatabase()
     {
         try
@@ -87,7 +87,4 @@ public class PatientController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
-
-    
 }

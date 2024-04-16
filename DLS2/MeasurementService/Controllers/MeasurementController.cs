@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MeasurementService.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class MeasurementController : ControllerBase
 {
 
@@ -19,7 +19,7 @@ public class MeasurementController : ControllerBase
     
       
     [HttpGet]
-    [Route("/{ssn}")]
+    [Route("{ssn}")]
     public async Task<IActionResult> GetAllMeasurementsBySsn([FromRoute] string ssn)
     {
         try
@@ -48,7 +48,7 @@ public class MeasurementController : ControllerBase
     }
     
     [HttpDelete]
-    [Route("DeleteMeasurement/{{id}}")]
+    [Route("DeleteMeasurement/{id}")]
     public async Task<IActionResult> DeleteMeasurement([FromRoute] int id)
     {
         try
@@ -64,7 +64,7 @@ public class MeasurementController : ControllerBase
 
 
     [HttpPut]
-    [Route("UpdateMeasurement/{{id}}")]
+    [Route("UpdateMeasurement/{id}")]
     public async Task<IActionResult> UpdateMeasurement([FromRoute] int id, [FromBody] UpdateMeasurementDTO dto)
     {
         try
@@ -75,6 +75,21 @@ public class MeasurementController : ControllerBase
         catch (Exception e)
         {
             return BadRequest(e.ToString());
+        }
+    }
+    
+    [HttpPost]
+    [Route("RebuildDb")]
+    public async Task<IActionResult> RebuildDatabase()
+    {
+        try
+        {
+            await _measurementService.RebuildDatabase();
+            return StatusCode(200, "Database recreated");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
     }
 }

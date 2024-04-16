@@ -1,0 +1,145 @@
+version: '3.8'
+services:
+  redis:
+    image: 'redislabs/redisearch:latest'
+    container_name: 'redis'
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    ports:
+      - '6379:6379'
+      
+  patient-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      MSSQL_SA_PASSWORD: "SuperSecret7!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data_patient_db:/var/opt/mssql
+    networks:
+      - local_network
+      
+  measurement-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      MSSQL_SA_PASSWORD: "SuperSecret7!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1435:1433"
+    volumes:
+      - mssql_data_measurement_db:/var/opt/mssql
+    networks:
+      - local_network
+      
+  seq:
+    image: datalust/seq:latest
+    ports:
+      - "5341:5341"
+      - "5342:80"
+    volumes:
+      - seq_data:/data
+    networks:
+      - local_network
+    environment:
+      ACCEPT_EULA: "Y"
+      
+  zipkin-storage:
+    image: openzipkin/zipkin-mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - zipkin_data:/mysql/data
+    networks:
+      - local_network
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mysql
+      - MYSQL_HOST=zipkin-storage
+      - MYSQL_USER=zipkin
+      - MYSQL_PASS=zipkin
+    depends_on:
+      - zipkin-storage
+    networks:
+      - local_network
+      
+  apigateway:
+    image: apigateway
+    build:
+      context: .
+      dockerfile: ./DLS2/APIGateway/Dockerfile
+    ports:
+      - '5206:80'
+  
+  measurement-service:
+    image: measurementservice
+    build:
+      context: .
+      dockerfile: ./DLS2/MeasurementService/Dockerfile
+    ports:
+      - '9090:80'
+    depends_on:
+      redis:
+        condition: service_healthy
+      measurement-db:
+        condition: service_started
+      apigateway:
+        condition: service_started
+  
+  patient-service:
+    image: patientservice
+    build:
+      context: .
+      dockerfile: ./DLS2/PatientService/Dockerfile
+    ports:
+      - '9092:80'
+    depends_on: 
+      redis:
+        condition: service_healthy
+      patient-db:
+        condition: service_started
+      apigateway:
+        condition: service_started
+
+  doctor-ui:
+    ports:
+      - '8080:80'
+    build:
+      context: .
+      dockerfile: ./DoctorUI/Dockerfile
+    volumes:
+      - ./DoctorUI/src:/app/src:delegated
+    networks:
+      - local_network
+    depends_on:
+      - patient-service
+      - measurement-service
+  
+  patient-ui:
+    ports:
+      - '8082:80'
+    build:
+      context: .
+      dockerfile: ./PatientUI/Dockerfile
+    volumes:
+      - ./PatientUI/src:/app/src:delegated
+    networks:
+      - local_network
+    depends_on:
+      - measurement-service
+      
+volumes:
+  seq_data:
+  zipkin_data:
+  mssql_data_measurement_db:
+  mssql_data_patient_db:
+networks:
+  local_network:
+    driver: bridge
