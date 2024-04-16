@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.Metrics;
+using AutoMapper;
 using MeasurementService.Core.DTOs;
 using MeasurementService.Core.Entities;
 using MeasurementService.Core.Repositories.Interfaces;
@@ -31,13 +32,13 @@ public class MeasurementService : IMeasurementService
         return await _measurementRepository.GetAllMeasurementsBySsn(ssn);
     }
 
-    public async Task CreateMeasurement(Measurement measurement)
+    public async Task<Measurement> CreateMeasurement(Measurement measurement)
     {
         using var activity = _tracer.StartActiveSpan("CreateMeasurement");
         
         Logging.Log.Information("Called CreateMeasurement function");
         
-        await _measurementRepository.CreateMeasurement(measurement);
+        return await _measurementRepository.CreateMeasurement(measurement);
     }
 
     public async Task DeleteMeasurement(int id)
