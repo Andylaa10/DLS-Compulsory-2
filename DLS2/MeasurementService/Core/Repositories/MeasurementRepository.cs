@@ -1,4 +1,5 @@
-﻿using MeasurementService.Core.Entities;
+﻿using System.Diagnostics.Metrics;
+using MeasurementService.Core.Entities;
 using MeasurementService.Core.Repositories.Interfaces;
 using MeasurementService.Helper;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,11 @@ public class MeasurementRepository : IMeasurementRepository
         return await _context.Measurements.Where(m => m.SSN == ssn).ToListAsync();
     }
 
-    public async Task CreateMeasurement(Measurement measurement)
+    public async Task<Measurement> CreateMeasurement(Measurement measurement)
     {
         await _context.Measurements.AddAsync(measurement);
         await _context.SaveChangesAsync();
+        return measurement;
     }
 
     public async Task DeleteMeasurement(int id)

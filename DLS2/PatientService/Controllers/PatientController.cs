@@ -14,7 +14,7 @@ public class PatientController : ControllerBase
     {
         _patientService = patientService;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetAllPatients()
     {
@@ -27,7 +27,7 @@ public class PatientController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    
+
     [HttpGet]
     [Route("/{ssn}")]
     public async Task<IActionResult> GetPatientBySsn([FromRoute] string ssn)
@@ -41,15 +41,14 @@ public class PatientController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    
+
     [HttpPost]
     [Route("AddPatient")]
     public async Task<IActionResult> AddPatient([FromBody] Patient patient)
     {
         try
         {
-            await _patientService.CreatePatient(patient);
-            return StatusCode(201, "Successfully added patient to db");
+            return StatusCode(201, await _patientService.CreatePatient(patient));
         }
         catch (Exception e)
         {
@@ -71,8 +70,8 @@ public class PatientController : ControllerBase
             return BadRequest(e.ToString());
         }
     }
-    
-    
+
+
     [HttpGet]
     [Route("/rebuild")]
     public async Task<IActionResult> RebuildDatabase()
@@ -87,7 +86,4 @@ public class PatientController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
-
-    
 }
