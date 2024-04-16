@@ -3,6 +3,147 @@
     "baseURL": "http://localhost:5206"
   },
   "Routes": [
-    
+    {
+      "//MeasurementService": "MeasurementService",
+      "UpstreamPathTemplate": "/api/Measurement/{ssn}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/Measurement/{ssn}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "measurement-service"
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/Measurement/CreateMeasurement",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/Measurement/CreateMeasurement",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "measurement-service"
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/Measurement/DeleteMeasurement/{id}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/Measurement/DeleteMeasurement/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "measurement-service"
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/Measurement/UpdateMeasurement/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/Measurement/UpdateMeasurement/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "measurement-service"
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/Measurement/RebuildDb",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/Measurement/RebuildDb",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "measurement-service"
+        }
+      ]
+    },
+    {
+      "//PatientService": "PatientService",
+      "UpstreamPathTemplate": "/api/Patient",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/Patient",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "patient-service"
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/Patient/{ssn}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/Patient/{ssn}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "patient-service"
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/Patient/CreatePatient",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/Patient/CreatePatient",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "patient-service"
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/Patient/DeletePatient/{ssn}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/Patient/DeletePatient/{ssn}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "patient-service"
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/Patient/RebuildDb",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/Patient/RebuildDb",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "patient-service"
+        }
+      ]
+    }
   ]
 }
