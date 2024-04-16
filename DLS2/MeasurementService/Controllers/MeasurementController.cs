@@ -68,7 +68,7 @@ public class MeasurementController : ControllerBase
     {
         try
         {
-            await _measurementService.UpdateMeasurement(dto, id);
+            await _measurementService.UpdateMeasurement(id, dto);
             return Ok();
         }
         catch (Exception e)

@@ -50,13 +50,13 @@ public class MeasurementService : IMeasurementService
         await _measurementRepository.DeleteMeasurement(id);
     }
 
-    public async Task UpdateMeasurement(UpdateMeasurementDTO measurement, int id)
+    public async Task UpdateMeasurement(int id, UpdateMeasurementDTO measurement)
     {
         using var activity = _tracer.StartActiveSpan("UpdateMeasurement");
         
         Logging.Log.Information("Called UpdateMeasurement function");
         
-        await _measurementRepository.UpdateMeasurement(_mapper.Map<Measurement>(measurement), id);
+        await _measurementRepository.UpdateMeasurement(id, _mapper.Map<Measurement>(measurement));
     }
 
     public async Task RebuildDatabase()

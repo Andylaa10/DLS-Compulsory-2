@@ -1,10 +1,4 @@
-using System.Diagnostics.Metrics;
-using System.Security.Claims;
-using MeasurementService.Controllers;
-using MeasurementService.Core.Entities;
-using MeasurementService.Core.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
+
 
 namespace MeasurementService.Test;
 
@@ -38,5 +32,28 @@ public class MeasurementApiTest
         var postResult = Assert.IsType<Measurement>(objectResult.Value);
         Assert.Equal(201, objectResult.StatusCode);
         Assert.Equal(testMeasurement, postResult);
+    }
+    
+    [Fact]
+    public async Task TestEditMeasurement_ReturnsOkay()
+    {
+        // Arrange  
+        var measurementId = 1;  
+        var updateMeasurementDto = new UpdateMeasurementDTO()  
+        {  
+            ViewedByDoctor = true
+        };
+        
+        var mockService = new Mock<IMeasurementService>();  
+        mockService.Setup(service => service.UpdateMeasurement(measurementId, updateMeasurementDto)).Returns(Task.CompletedTask);  
+        
+        var controller = new MeasurementController(mockService.Object);
+  
+        // Act  
+        var result = await controller.UpdateMeasurement(measurementId, updateMeasurementDto);  
+  
+        // Assert  
+        var okResult = Assert.IsType<OkResult>(result);  
+        Assert.Equal(200, okResult.StatusCode);  
     }
 }

@@ -30,7 +30,7 @@ public class MeasurementRepository : IMeasurementRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateMeasurement(Measurement measurement, int id)
+    public async Task UpdateMeasurement(int id, Measurement measurement)
     {
         var measurementToUpdate = await _context.Measurements.FirstOrDefaultAsync(m => m.Id == id) ??
                                   throw new NullReferenceException();
