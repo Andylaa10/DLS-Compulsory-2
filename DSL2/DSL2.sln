@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementService", "MeasurementService\MeasurementService.csproj", "{01B36527-E300-4BAE-A8A3-710509886D34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientService", "PatientService\PatientService.csproj", "{ED36BF0F-A1C2-4C48-ACCD-BE8DD876A54C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01B36527-E300-4BAE-A8A3-710509886D34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01B36527-E300-4BAE-A8A3-710509886D34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01B36527-E300-4BAE-A8A3-710509886D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01B36527-E300-4BAE-A8A3-710509886D34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED36BF0F-A1C2-4C48-ACCD-BE8DD876A54C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED36BF0F-A1C2-4C48-ACCD-BE8DD876A54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED36BF0F-A1C2-4C48-ACCD-BE8DD876A54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED36BF0F-A1C2-4C48-ACCD-BE8DD876A54C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
