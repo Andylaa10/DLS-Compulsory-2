@@ -10,7 +10,7 @@ public interface IPatientRepository
     
     public Task DeletePatient(string ssn);
 
-    public Task CreatePatient(Patient patient);
+    public Task<Patient> CreatePatient(Patient patient);
     
     public Task RebuildDatabase();
 }

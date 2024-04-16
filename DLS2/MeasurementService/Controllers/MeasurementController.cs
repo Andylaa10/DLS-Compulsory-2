@@ -38,8 +38,7 @@ public class MeasurementController : ControllerBase
     {
         try
         {
-            await _measurementService.CreateMeasurement(measurement);
-            return StatusCode(201, "Successfully added measurement to db");
+            return StatusCode(201, await _measurementService.CreateMeasurement(measurement));
         }
         catch (Exception e)
         {
@@ -69,7 +68,7 @@ public class MeasurementController : ControllerBase
     {
         try
         {
-            await _measurementService.UpdateMeasurement(dto, id);
+            await _measurementService.UpdateMeasurement(id, dto);
             return Ok();
         }
         catch (Exception e)

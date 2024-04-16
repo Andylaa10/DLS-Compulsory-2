@@ -43,10 +43,11 @@ public class PatientRepository : IPatientRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task CreatePatient(Patient patient)
+    public async Task<Patient> CreatePatient(Patient patient)
     {
         await _context.Patients.AddAsync(patient);
         await _context.SaveChangesAsync();
+        return patient;
     }
 
     public async Task RebuildDatabase()

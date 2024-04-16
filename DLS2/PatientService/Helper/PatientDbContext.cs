@@ -14,7 +14,7 @@ public class PatientDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         //TODO FIX THIS CONNECTION STRING
-        optionsBuilder.UseSqlServer("Server=localhost;Database=CalculatorDb;User Id=sa;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;");        
+        optionsBuilder.UseSqlServer("Server=patient-db;Database=PatientDb;User Id=sa;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;");        
     }
     
     
