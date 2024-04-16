@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using PatientService.Core.Entities;
+using PatientService.Core.Services.DTOs;
 using PatientService.Core.Services.Interfaces;
 
 namespace PatientService.Controllers;
@@ -44,7 +44,7 @@ public class PatientController : ControllerBase
 
     [HttpPost]
     [Route("CreatePatient")]
-    public async Task<IActionResult> AddPatient([FromBody] Patient patient)
+    public async Task<IActionResult> AddPatient([FromBody] CreatePatientDto patient)
     {
         try
         {

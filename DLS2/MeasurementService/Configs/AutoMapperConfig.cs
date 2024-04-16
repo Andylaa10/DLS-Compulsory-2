@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MeasurementService.Core.DTOs;
 using MeasurementService.Core.Entities;
+using MeasurementService.Core.Services.DTOs;
 
 namespace MeasurementService.Configs;
 
@@ -10,7 +10,9 @@ public static class AutoMapperConfig
     {
         var mapper = new MapperConfiguration(configure =>
         {
-            configure.CreateMap<UpdateMeasurementDTO, Measurement>();
+            //DTO to Entity
+            configure.CreateMap<CreateMeasurementDto, Measurement>();
+            configure.CreateMap<UpdateMeasurementDto, Measurement>();
         }).CreateMapper();
 
         return mapper;

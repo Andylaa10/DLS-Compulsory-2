@@ -6,27 +6,35 @@ public class PatientApiTest
     public async Task TestCreateMeasurement_ReturnsOkayAndPost()  
     {
         // Arrange    
-        var testPatient = new Patient
+        var dto = new CreatePatientDto()
         {  
             Email = "PatientMail@mail.com",
             SSN = "2201960000",
             Name = "Kristian Hansen Hollænder"
-        };  
+        };
+
+        var expectedPatient = new Patient()
+        {
+            Id = 1,
+            Email = "PatientMail@mail.com",
+            SSN = "2201960000",
+            Name = "Kristian Hansen Hollænder"
+        };
         
         var mockService = new Mock<IPatientService>();  
-        mockService.Setup(service => service.CreatePatient(It.IsAny<Patient>()))  
-            .ReturnsAsync(testPatient);
+        mockService.Setup(service => service.CreatePatient(It.IsAny<CreatePatientDto>()))  
+            .ReturnsAsync(expectedPatient);
 
         var controller = new PatientController(mockService.Object);  
   
         // Act    
-        var result = await controller.AddPatient(testPatient);  
+        var result = await controller.AddPatient(dto);  
   
         // Assert    
         var objectResult = Assert.IsType<ObjectResult>(result);
-        var postResult = Assert.IsType<Patient>(objectResult.Value);
+        var patientResult = Assert.IsType<Patient>(objectResult.Value);
         Assert.Equal(201, objectResult.StatusCode);
-        Assert.Equal(testPatient, postResult);
+        Assert.Equal(expectedPatient, patientResult);
     }
     
     [Fact]  

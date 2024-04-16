@@ -1,0 +1,22 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  apigateway:
+    build:
+      context: "C:\\Users\\andyl\\Desktop\\WebDevelopment\\DLS-Compulsory-2"
+      dockerfile: "./DLS2/APIGateway/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net7.0/APIGateway.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "apigateway:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\andyl\\.nuget\\packages:/root/.nuget/packages"
+    - "C:\\Users\\andyl\\Desktop\\WebDevelopment\\DLS-Compulsory-2\\DLS2\\APIGateway:/app:rw"
+    - "C:\\Users\\andyl\\Desktop\\WebDevelopment\\DLS-Compulsory-2\\DLS2:/src:rw"
+    working_dir: "/app"

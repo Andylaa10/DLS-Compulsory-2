@@ -1,14 +1,19 @@
-﻿using System.Diagnostics.Metrics;
-using MeasurementService.Core.Entities;
+﻿using MeasurementService.Core.Entities;
+using MeasurementService.Core.Helper;
 using MeasurementService.Core.Repositories.Interfaces;
-using MeasurementService.Helper;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace MeasurementService.Core.Repositories;
 
 public class MeasurementRepository : IMeasurementRepository
 {
     private readonly MeasurementDbContext _context;
+
+    public MeasurementRepository(MeasurementDbContext context)
+    {
+        _context = context;
+    }
 
     public async Task<IEnumerable<Measurement>> GetAllMeasurementsBySsn(string ssn)
     {

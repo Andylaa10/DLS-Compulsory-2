@@ -1,8 +1,7 @@
-﻿using System.Diagnostics.Metrics;
-using AutoMapper;
-using MeasurementService.Core.DTOs;
+﻿using AutoMapper;
 using MeasurementService.Core.Entities;
 using MeasurementService.Core.Repositories.Interfaces;
+using MeasurementService.Core.Services.DTOs;
 using MeasurementService.Core.Services.Interfaces;
 using Monitoring;
 using OpenTelemetry.Trace;
@@ -32,13 +31,13 @@ public class MeasurementService : IMeasurementService
         return await _measurementRepository.GetAllMeasurementsBySsn(ssn);
     }
 
-    public async Task<Measurement> CreateMeasurement(Measurement measurement)
+    public async Task<Measurement> CreateMeasurement(CreateMeasurementDto measurement)
     {
         using var activity = _tracer.StartActiveSpan("CreateMeasurement");
         
         Logging.Log.Information("Called CreateMeasurement function");
         
-        return await _measurementRepository.CreateMeasurement(measurement);
+        return await _measurementRepository.CreateMeasurement(_mapper.Map<Measurement>(measurement));
     }
 
     public async Task DeleteMeasurement(int id)
@@ -50,7 +49,7 @@ public class MeasurementService : IMeasurementService
         await _measurementRepository.DeleteMeasurement(id);
     }
 
-    public async Task UpdateMeasurement(int id, UpdateMeasurementDTO measurement)
+    public async Task UpdateMeasurement(int id, UpdateMeasurementDto measurement)
     {
         using var activity = _tracer.StartActiveSpan("UpdateMeasurement");
         
