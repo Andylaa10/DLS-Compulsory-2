@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementService", "Measu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientService", "PatientService\PatientService.csproj", "{ED36BF0F-A1C2-4C48-ACCD-BE8DD876A54C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring", "Monitoring\Monitoring.csproj", "{4D9B724C-16A6-4FE9-84D1-45F842694F0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{ED36BF0F-A1C2-4C48-ACCD-BE8DD876A54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED36BF0F-A1C2-4C48-ACCD-BE8DD876A54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED36BF0F-A1C2-4C48-ACCD-BE8DD876A54C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D9B724C-16A6-4FE9-84D1-45F842694F0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D9B724C-16A6-4FE9-84D1-45F842694F0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D9B724C-16A6-4FE9-84D1-45F842694F0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D9B724C-16A6-4FE9-84D1-45F842694F0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

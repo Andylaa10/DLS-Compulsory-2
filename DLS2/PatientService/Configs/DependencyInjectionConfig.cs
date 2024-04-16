@@ -11,5 +11,7 @@ public static class DependencyInjectionConfig
         //DI
         services.AddScoped<IPatientRepository, PatientRepository>();
         services.AddScoped<IPatientService, Core.Services.PatientService>();
+        
+        
     }
 }
