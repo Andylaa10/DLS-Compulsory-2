@@ -11,5 +11,6 @@ public static class DependencyInjectionConfig
         //DI 
         services.AddScoped<IMeasurementRepository, MeasurementRepository>();
         services.AddScoped<IMeasurementService, Core.Services.MeasurementService>();
+        services.AddSingleton(AutoMapperConfig.ConfigureAutomapper());
     }
 }
