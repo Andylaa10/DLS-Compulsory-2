@@ -25,6 +25,10 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Cache\Cache.csproj" />
+    </ItemGroup>
+
 
 
 </Project>
