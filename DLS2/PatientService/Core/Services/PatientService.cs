@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Cache;
 using Monitoring;
 using OpenTelemetry.Trace;
 using PatientService.Core.Entities;
@@ -13,12 +14,15 @@ public class PatientService : IPatientService
     private readonly IPatientRepository _patientRepository;
     private readonly Tracer _tracer;
     private readonly IMapper _mapper;
+    private readonly RedisClient _redisClient;
 
-    public PatientService(IPatientRepository patientRepository, Tracer tracer, IMapper mapper)
+    public PatientService(IPatientRepository patientRepository, Tracer tracer, IMapper mapper, RedisClient redisClient)
     {
         _patientRepository = patientRepository;
         _tracer = tracer;
         _mapper = mapper;
+        _redisClient = redisClient;
+        _redisClient.Connect();
     }
 
     public async Task<IEnumerable<Patient>> GetAllPatients()

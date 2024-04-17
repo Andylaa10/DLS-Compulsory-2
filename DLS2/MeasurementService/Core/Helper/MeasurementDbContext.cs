@@ -7,8 +7,7 @@ public class MeasurementDbContext : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=localhost,1438;Database=MeasurementDb;User Id=SA;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;");        
-        //optionsBuilder.UseSqlServer("Server=measurement-db;Database=MeasurementDb;User Id=SA;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;");        
+        optionsBuilder.UseSqlServer("Server=measurement-db;Database=MeasurementDb;User Id=SA;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;");        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

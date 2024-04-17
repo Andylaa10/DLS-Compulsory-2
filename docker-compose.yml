@@ -1,16 +1,16 @@
 version: '3.8'
 services:
 #Cache
-#  redis:
-#    image: 'redislabs/redisearch:latest'
-#    container_name: 'redis'
-#    healthcheck:
-#      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
-#      interval: 1s
-#      timeout: 3s
-#      retries: 5
-#    ports:
-#      - '6379:6379'
+  redis:
+    image: 'redislabs/redisearch:latest'
+    container_name: 'redis'
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    ports:
+      - '6379:6379'
 
 #Database
   patient-db:
@@ -22,8 +22,6 @@ services:
       - "1433:1433"
     volumes:
       - mssql_data_patient_db:/var/opt/mssql
-    networks:
-      - local_network
 
   measurement-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -31,11 +29,9 @@ services:
       MSSQL_SA_PASSWORD: "SuperSecret7!"
       ACCEPT_EULA: "Y"
     ports:
-      - "1438:1433"
+      - "1434:1433"
     volumes:
       - mssql_data_measurement_db:/var/opt/mssql
-    networks:
-      - local_network
 
 #Monitoring
   seq:
@@ -89,8 +85,8 @@ services:
     ports:
       - '9090:80'
     depends_on:
-#      redis:
-#        condition: service_healthy
+      redis:
+        condition: service_healthy
       measurement-db:
         condition: service_started
       apigateway:
@@ -104,8 +100,8 @@ services:
     ports:
       - '9092:80'
     depends_on:
-#      redis:
-#        condition: service_healthy
+      redis:
+        condition: service_healthy
       patient-db:
         condition: service_started
       apigateway:
