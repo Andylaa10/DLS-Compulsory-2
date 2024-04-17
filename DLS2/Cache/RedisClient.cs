@@ -5,22 +5,20 @@ namespace Cache;
 
 public class RedisClient
 {
-    private readonly string _hostname;
-    private readonly int _port;
+    private readonly string _serviceName;
     private readonly string _password;
 
     private ConnectionMultiplexer redis;
 
-    public RedisClient(string hostname, int port, string password)
+    public RedisClient(string serviceName,string password)
     {
-        _hostname = hostname;
-        _port = port;
+        _serviceName = serviceName;
         _password = password;
     }
 
     public void Connect()
     {
-        string connectionString = $"{_hostname}:{_port},password={_password}";
+        string connectionString = $"{_serviceName},password={_password}";
         redis = ConnectionMultiplexer.Connect(connectionString);
     }
 

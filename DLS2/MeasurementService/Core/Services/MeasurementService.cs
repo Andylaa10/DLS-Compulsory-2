@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Cache;
 using MeasurementService.Core.Entities;
 using MeasurementService.Core.Repositories.Interfaces;
 using MeasurementService.Core.Services.DTOs;
@@ -14,12 +15,15 @@ public class MeasurementService : IMeasurementService
     private readonly IMeasurementRepository _measurementRepository;
     private readonly IMapper _mapper;
     private readonly Tracer _tracer;
+    private readonly RedisClient _redisClient;
 
-    public MeasurementService(IMeasurementRepository measurementRepository, IMapper mapper, Tracer tracer)
+    public MeasurementService(IMeasurementRepository measurementRepository, IMapper mapper, Tracer tracer, RedisClient redisClient)
     {
         _measurementRepository = measurementRepository;
         _mapper = mapper;
         _tracer = tracer;
+        _redisClient = redisClient;
+        _redisClient.Connect();
     }
 
     public async Task<IEnumerable<Measurement>> GetAllMeasurementsBySsn(string ssn)

@@ -1,4 +1,5 @@
-﻿using Monitoring;
+﻿using Cache;
+using Monitoring;
 using OpenTelemetry.Trace;
 using PatientService.Core.Helper;
 using PatientService.Core.Repositories;
@@ -24,5 +25,8 @@ public static class DependencyInjectionConfig
         //Tracing
         services.AddOpenTelemetry().Setup();
         services.AddSingleton(TracerProvider.Default.GetTracer("MyTracer"));
+        
+        //Caching
+        services.AddSingleton(RedisClientFactory.CreateRedisClient());
     }
 }
