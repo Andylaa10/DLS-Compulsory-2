@@ -19,6 +19,21 @@
       ]
     },
     {
+      "//MeasurementService": "MeasurementService",
+      "UpstreamPathTemplate": "/api/Measurement?pageNumber={pageNumber}&pageSize={pageSize}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/Measurement?pageNumber={pageNumber}&pageSize={pageSize}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "measurement-service"
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/api/Measurement/CreateMeasurement",
       "UpstreamHttpMethod": [
         "POST"
@@ -95,6 +110,20 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/Patient/{ssn}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "patient-service"
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/Patient?pageNumber={pageNumber}&pageSize={pageSize}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/Patient?pageNumber={pageNumber}&pageSize={pageSize}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

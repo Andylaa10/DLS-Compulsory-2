@@ -1,4 +1,5 @@
 ﻿using MeasurementService.Core.Entities;
+using MeasurementService.Core.Entities.Helper;
 
 namespace MeasurementService.Core.Repositories.Interfaces;
 

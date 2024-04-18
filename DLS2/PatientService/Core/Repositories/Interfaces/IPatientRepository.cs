@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using PatientService.Core.Entities;
+﻿using PatientService.Core.Entities;
 
 namespace PatientService.Core.Repositories.Interfaces;
 

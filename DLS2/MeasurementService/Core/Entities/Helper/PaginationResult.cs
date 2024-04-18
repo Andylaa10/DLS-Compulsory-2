@@ -1,4 +1,4 @@
-﻿namespace MeasurementService.Core.Entities;
+﻿namespace MeasurementService.Core.Entities.Helper;
 
 public class PaginationResult<T>
 {

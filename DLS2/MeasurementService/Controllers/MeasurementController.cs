@@ -1,5 +1,3 @@
-using MeasurementService.Core.DTOs;
-using MeasurementService.Core.Entities;
 using MeasurementService.Core.Services.DTOs;
 using MeasurementService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Cache;
 using MeasurementService.Core.Entities;
+using MeasurementService.Core.Entities.Helper;
 using MeasurementService.Core.Repositories.Interfaces;
 using MeasurementService.Core.Services.DTOs;
 using MeasurementService.Core.Services.Interfaces;

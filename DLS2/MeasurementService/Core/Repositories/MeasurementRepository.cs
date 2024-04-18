@@ -1,5 +1,5 @@
-﻿using System.Diagnostics.Metrics;
-using MeasurementService.Core.Entities;
+﻿using MeasurementService.Core.Entities;
+using MeasurementService.Core.Entities.Helper;
 using MeasurementService.Core.Helper;
 using MeasurementService.Core.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;

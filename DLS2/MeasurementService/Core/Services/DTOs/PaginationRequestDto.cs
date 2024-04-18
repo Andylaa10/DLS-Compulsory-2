@@ -1,4 +1,4 @@
-﻿namespace MeasurementService.Core.DTOs;
+﻿namespace MeasurementService.Core.Services.DTOs;
 
 public class PaginationRequestDto
 {
