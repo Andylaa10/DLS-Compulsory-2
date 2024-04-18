@@ -1,4 +1,5 @@
-﻿using MeasurementService.Core.Entities;
+﻿using System.Diagnostics.Metrics;
+using MeasurementService.Core.Entities;
 using MeasurementService.Core.Helper;
 using MeasurementService.Core.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,18 @@ public class MeasurementRepository : IMeasurementRepository
         return await _context.Measurements.Where(m => m.SSN == ssn).ToListAsync();
     }
 
+    public async Task<IEnumerable<Measurement>> GetAllMeasurementsBySsnPaginated(string ssn, int pageNumber, int pageSize)
+    {
+        IQueryable<Measurement> query = _context.Measurements.Where(m => m.SSN == ssn);
+
+        List<Measurement> measurements = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return measurements;
+    }
+
     public async Task<Measurement> CreateMeasurement(Measurement measurement)
     {
         await _context.Measurements.AddAsync(measurement);
@@ -39,7 +52,7 @@ public class MeasurementRepository : IMeasurementRepository
     {
         var measurementToUpdate = await _context.Measurements.FirstOrDefaultAsync(m => m.Id == id) ??
                                   throw new NullReferenceException();
-        
+
         if (measurement.Id == id)
         {
             measurementToUpdate.ViewedByDoctor = measurement.ViewedByDoctor;

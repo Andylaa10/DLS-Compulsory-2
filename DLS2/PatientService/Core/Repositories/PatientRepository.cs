@@ -24,7 +24,25 @@ public class PatientRepository : IPatientRepository
 
         return await _context.Patients.ToListAsync();
     }
+    
+    public async Task<PaginationResult<Patient>> GetAllPatientsWithPagination(int pageNumber, int pageSize)
+    {
+        IQueryable<Patient> query = _context.Patients;
 
+        int totalCount = await query.CountAsync();
+
+        List<Patient> patients = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PaginationResult<Patient>
+        {
+            Items = patients,
+            TotalCount = totalCount
+        };
+    }
+    
     public async Task<Patient> GetPatientBySsn(string ssn)
     {
         // TODO Add Tracing

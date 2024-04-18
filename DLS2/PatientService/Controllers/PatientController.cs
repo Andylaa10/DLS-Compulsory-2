@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PatientService.Core.Entities;
 using PatientService.Core.Services.DTOs;
 using PatientService.Core.Services.Interfaces;
 
@@ -27,6 +28,25 @@ public class PatientController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    [HttpGet]
+    [Route("GetPatientPage")]
+    public async Task<IActionResult> GetAllTrucksPage([FromQuery] PaginationRequestDto dto)
+    {
+        try
+        {
+            PaginationResult<Patient> patients =
+                await _patientService.GetAllPatientsWithPagination(dto.PageNumber, dto.PageSize);
+            Response.Headers.Add("X-Total-Count", patients.TotalCount.ToString());
+
+            return Ok(patients);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.ToString());
+        }
+    }
+
 
     [HttpGet]
     [Route("{ssn}")]
@@ -70,7 +90,7 @@ public class PatientController : ControllerBase
             return BadRequest(e.ToString());
         }
     }
-    
+
     [HttpPost]
     [Route("RebuildDb")]
     public async Task<IActionResult> RebuildDatabase()
