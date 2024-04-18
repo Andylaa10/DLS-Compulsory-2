@@ -30,13 +30,30 @@ public class PatientController : ControllerBase
     }
 
     [HttpGet]
+    [Route("SearchPatients")]
+    public async Task<IActionResult> SearchPatients([FromQuery] SearchDto dto)
+    {
+        try
+        {
+            var patients = await _patientService.SearchPatients(dto);
+            Response.Headers.Add("X-Total-Count", patients.TotalCount.ToString());
+
+            return Ok(patients);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpGet]
     [Route("GetPatientPage")]
     public async Task<IActionResult> GetAllPatientsPage([FromQuery] PaginationRequestDto dto)
     {
         try
         {
-            PaginationResult<Patient> patients =
-                await _patientService.GetAllPatientsWithPagination(dto.PageNumber, dto.PageSize);
+            var patients = await _patientService.GetAllPatientsWithPagination(dto);
             Response.Headers.Add("X-Total-Count", patients.TotalCount.ToString());
 
             return Ok(patients);

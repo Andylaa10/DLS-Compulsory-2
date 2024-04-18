@@ -119,6 +119,20 @@
       ]
     },
     {
+      "UpstreamPathTemplate": "/api/Patient/SearchPatients?searchTerm={searchTerm}&pageNumber={pageNumber}&pageSize={pageSize}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/Patient/SearchPatients?searchTerm={searchTerm}&pageNumber={pageNumber}&pageSize={pageSize}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "patient-service"
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/api/Patient/GetPatientPage?pageNumber={pageNumber}&pageSize={pageSize}",
       "UpstreamHttpMethod": [
         "GET"
