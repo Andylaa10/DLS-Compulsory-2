@@ -21,16 +21,24 @@ public class MeasurementRepository : IMeasurementRepository
         return await _context.Measurements.Where(m => m.SSN == ssn).ToListAsync();
     }
 
-    public async Task<IEnumerable<Measurement>> GetAllMeasurementsBySsnPaginated(string ssn, int pageNumber, int pageSize)
+    public async Task<PaginationResult<Measurement>> GetAllMeasurementsBySsnPaginated(string ssn, int pageNumber, int pageSize)
     {
-        IQueryable<Measurement> query = _context.Measurements.Where(m => m.SSN == ssn);
+        var query = _context.Measurements.Where(m => m.SSN == ssn);
+        
+        int totalCount = await query.CountAsync();
 
         List<Measurement> measurements = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
+        
+        var result = new PaginationResult<Measurement>
+        {
+            Items = measurements,
+            TotalCount = totalCount
+        };
 
-        return measurements;
+        return await Task.Run(() => result);
     }
 
     public async Task<Measurement> CreateMeasurement(Measurement measurement)

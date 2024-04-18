@@ -35,7 +35,7 @@ public class MeasurementService : IMeasurementService
         return await _measurementRepository.GetAllMeasurementsBySsn(ssn);
     }
 
-    public async Task<IEnumerable<Measurement>> GetAllMeasurementsBySsnPaginated(string ssn, int pageNumber, int pageSize)
+    public async Task<PaginationResult<Measurement>> GetAllMeasurementsBySsnPaginated(string ssn, int pageNumber, int pageSize)
     {
         using var activity = _tracer.StartActiveSpan("GetAllMeasurementsBySsnPaginated");
         

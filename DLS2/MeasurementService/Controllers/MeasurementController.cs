@@ -38,13 +38,11 @@ public class MeasurementController : ControllerBase
     {
         try
         {
-            IEnumerable<Measurement> measurements =
-                await _measurementService.GetAllMeasurementsBySsnPaginated(ssn, dto.PageNumber, dto.PageSize);
+           var result = await _measurementService.GetAllMeasurementsBySsnPaginated(ssn, dto.PageNumber, dto.PageSize);
             
-            // TODO Might have to fix this? 
-            Response.Headers.Add("X-Total-Count", "");
+            Response.Headers.Add("X-Total-Count", result.TotalCount.ToString());
 
-            return Ok(measurements);
+            return Ok(result);
         }
         catch (Exception ex)
         {
