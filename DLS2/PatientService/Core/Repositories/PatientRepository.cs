@@ -16,12 +16,6 @@ public class PatientRepository : IPatientRepository
 
     public async Task<IEnumerable<Patient>> GetAllPatients()
     {
-        //TODO add tracing
-        //using var activity = _tracer.StartActiveSpan("GetAllPatients");
-
-        //TODO Add logging
-        //Logging.Log.Information("Called GetAllPatients function");
-
         return await _context.Patients.ToListAsync();
     }
     
@@ -45,13 +39,6 @@ public class PatientRepository : IPatientRepository
     
     public async Task<Patient> GetPatientBySsn(string ssn)
     {
-        // TODO Add Tracing
-        //using var activity = _tracer.StartActiveSpan("GetPatientBySsn");
-
-        // TODO Add Logging
-        //Logging.Log.Information("Called GetPatientBySsn function");
-
-
         return await _context.Patients.FirstOrDefaultAsync(p => p.SSN == ssn) ?? throw new NullReferenceException();
     }
 
@@ -72,12 +59,6 @@ public class PatientRepository : IPatientRepository
 
     public async Task RebuildDatabase()
     {
-        // TODO add tracing
-        // using var activity = _tracer.StartActiveSpan("Rebuild DB");
-
-        // TODO add logging
-        // Logging.Log.Information("Called RebuildDatabase function");
-
         await _context.Database.EnsureDeletedAsync();
         await _context.Database.EnsureCreatedAsync();
     }
