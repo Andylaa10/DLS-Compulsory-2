@@ -18,15 +18,20 @@ public class PatientRepository : IPatientRepository
     {
         return await _context.Patients.ToListAsync();
     }
-    
-    public async Task<PaginationResult<Patient>> GetAllPatientsWithPagination(int pageNumber, int pageSize)
+
+    public async Task<PaginationResult<Patient>> SearchPatients(string searchTerm, int pageNumber, int pageSize)
     {
-        IQueryable<Patient> query = _context.Patients;
+        var search = searchTerm.ToLower();
 
-        int totalCount = await query.CountAsync();
+        IQueryable<Patient> query = _context.Patients
+            .Where(p => p.SSN.ToLower().Contains(search)
+                        || p.Email.ToLower().Contains(search)
+                        || p.Name.ToLower().Contains(search));
 
-        List<Patient> patients = await query
-            .Skip((pageNumber - 1) * pageSize)
+        var totalCount = await query.CountAsync();
+
+        var patients = await query
+            .Skip(pageNumber * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
@@ -36,7 +41,25 @@ public class PatientRepository : IPatientRepository
             TotalCount = totalCount
         };
     }
-    
+
+    public async Task<PaginationResult<Patient>> GetAllPatientsWithPagination(int pageNumber, int pageSize)
+    {
+        IQueryable<Patient> query = _context.Patients;
+
+        var totalCount = await query.CountAsync();
+
+        var patients = await query
+            .Skip(pageNumber * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PaginationResult<Patient>
+        {
+            Items = patients,
+            TotalCount = totalCount
+        };
+    }
+
     public async Task<Patient> GetPatientBySsn(string ssn)
     {
         return await _context.Patients.FirstOrDefaultAsync(p => p.SSN == ssn) ?? throw new NullReferenceException();

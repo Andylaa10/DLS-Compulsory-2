@@ -25,10 +25,10 @@ public class MeasurementRepository : IMeasurementRepository
     {
         var query = _context.Measurements.Where(m => m.SSN == ssn);
         
-        int totalCount = await query.CountAsync();
+        var totalCount = await query.CountAsync();
 
-        List<Measurement> measurements = await query
-            .Skip((pageNumber - 1) * pageSize)
+        var measurements = await query
+            .Skip(pageNumber * pageSize)
             .Take(pageSize)
             .ToListAsync();
         

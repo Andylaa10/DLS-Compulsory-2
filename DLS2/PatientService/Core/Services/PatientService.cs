@@ -34,13 +34,22 @@ public class PatientService : IPatientService
         return await _patientRepository.GetAllPatients();
     }
 
-    public async Task<PaginationResult<Patient>> GetAllPatientsWithPagination(int pageNumber, int pageSize)
+    public async Task<PaginationResult<Patient>> SearchPatients(SearchDto dto)
+    {
+        using var activity = _tracer.StartActiveSpan("SearchPatient");
+
+        Logging.Log.Information("Called SearchPatient function");
+
+        return await _patientRepository.SearchPatients(dto.SearchTerm, dto.PageNumber, dto.PageSize);
+    }
+
+    public async Task<PaginationResult<Patient>> GetAllPatientsWithPagination(PaginationRequestDto dto)
     {
         using var activity = _tracer.StartActiveSpan("GetAllPatientsWithPagination");
 
         Logging.Log.Information("Called GetAllPatientsWithPagination function");
 
-        return await _patientRepository.GetAllPatientsWithPagination(pageNumber, pageSize);
+        return await _patientRepository.GetAllPatientsWithPagination(dto.PageNumber, dto.PageSize);
     }
 
 
