@@ -35,6 +35,16 @@ public class MeasurementService : IMeasurementService
         return await _measurementRepository.GetAllMeasurementsBySsn(ssn);
     }
 
+    public async Task<IEnumerable<Measurement>> GetAllMeasurementsBySsnPaginated(string ssn, int pageNumber, int pageSize)
+    {
+        using var activity = _tracer.StartActiveSpan("GetAllMeasurementsBySsnPaginated");
+        
+        Logging.Log.Information("Called GetAllMeasurementsBySsnPaginated function");
+        
+        return await _measurementRepository.GetAllMeasurementsBySsnPaginated(ssn, pageNumber, pageSize);
+    }
+    
+
     public async Task<Measurement> CreateMeasurement(CreateMeasurementDto measurement)
     {
         using var activity = _tracer.StartActiveSpan("CreateMeasurement");

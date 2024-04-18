@@ -1,3 +1,5 @@
+using MeasurementService.Core.DTOs;
+using MeasurementService.Core.Entities;
 using MeasurementService.Core.Services.DTOs;
 using MeasurementService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -8,15 +10,14 @@ namespace MeasurementService.Controllers;
 [Route("api/[controller]")]
 public class MeasurementController : ControllerBase
 {
-
     private readonly IMeasurementService _measurementService;
 
     public MeasurementController(IMeasurementService measurementService)
     {
         _measurementService = measurementService;
     }
-    
-      
+
+
     [HttpGet]
     [Route("{ssn}")]
     public async Task<IActionResult> GetAllMeasurementsBySsn([FromRoute] string ssn)
@@ -30,7 +31,28 @@ public class MeasurementController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    
+
+    [HttpGet]
+    [Route("GetMeasurementPage")]
+    public async Task<IActionResult> GetAllMeasurementsBySsnPaginated([FromRoute] string ssn, [FromQuery] PaginationRequestDto dto)
+    {
+        try
+        {
+            IEnumerable<Measurement> measurements =
+                await _measurementService.GetAllMeasurementsBySsnPaginated(ssn, dto.PageNumber, dto.PageSize);
+            
+            // TODO Might have to fix this? 
+            Response.Headers.Add("X-Total-Count", "");
+
+            return Ok(measurements);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.ToString());
+        }
+    }
+
+
     [HttpPost]
     [Route("CreateMeasurement")]
     public async Task<IActionResult> CreateMeasurement([FromBody] CreateMeasurementDto measurement)
@@ -44,7 +66,7 @@ public class MeasurementController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    
+
     [HttpDelete]
     [Route("DeleteMeasurement/{id}")]
     public async Task<IActionResult> DeleteMeasurement([FromRoute] int id)
@@ -75,7 +97,7 @@ public class MeasurementController : ControllerBase
             return BadRequest(e.ToString());
         }
     }
-    
+
     [HttpPost]
     [Route("RebuildDb")]
     public async Task<IActionResult> RebuildDatabase()
