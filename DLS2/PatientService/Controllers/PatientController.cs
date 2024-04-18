@@ -31,7 +31,7 @@ public class PatientController : ControllerBase
 
     [HttpGet]
     [Route("GetPatientPage")]
-    public async Task<IActionResult> GetAllTrucksPage([FromQuery] PaginationRequestDto dto)
+    public async Task<IActionResult> GetAllPatientsPage([FromQuery] PaginationRequestDto dto)
     {
         try
         {

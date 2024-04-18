@@ -119,11 +119,11 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/api/Patient?pageNumber={pageNumber}&pageSize={pageSize}",
+      "UpstreamPathTemplate": "/api/Patient/GetPatientPage?pageNumber={pageNumber}&pageSize={pageSize}",
       "UpstreamHttpMethod": [
         "GET"
       ],
-      "DownstreamPathTemplate": "/api/Patient?pageNumber={pageNumber}&pageSize={pageSize}",
+      "DownstreamPathTemplate": "/api/Patient/GetPatientPage?pageNumber={pageNumber}&pageSize={pageSize}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
