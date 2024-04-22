@@ -22,12 +22,16 @@ jobs:
           dotnet-version: 7.0.x
       - name: Restore dependencies
         run: dotnet restore
+        working-directory: ./DLS2
       - name: Build
         run: dotnet build --no-restore
+        working-directory: ./DLS2
       - name: Test
         run: dotnet test --no-build --verbosity normal
-  validate_frontend:
-    name: validate Frontend
+        working-directory: ./DLS2
+        
+  validate_doctor_frontend:
+    name: validate doctor frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,5 +41,23 @@ jobs:
           node-version: '20'
       - name: Install dependencies
         run: npm install
+        working-directory: ./DoctorUI
       - name: Build
         run: npm run build
+        working-directory: ./DoctorUI
+        
+  validate_patient_frontend:
+    name: validate patient frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./PatientUI
+      - name: Build
+        run: npm run build
+        working-directory: ./PatientUI
