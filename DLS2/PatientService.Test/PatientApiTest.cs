@@ -2,40 +2,85 @@ namespace PatientService.Test;
 
 public class PatientApiTest
 {
-    [Fact]
-    public async Task TestCreateMeasurement_ReturnsOkayAndPost()  
-    {
-        // Arrange    
-        var dto = new CreatePatientDto()
+    [Fact]  
+    public async Task TestCreatePatient_ReturnsOkayAndPost()    
+    {  
+        // Arrange      
+        var dto = new CreatePatientDto()  
+        {    
+            Email = "PatientMail@mail.com",  
+            SSN = "2201960000",  
+            Name = "Kristian Hansen Hollænder"  
+        };  
+  
+        var expectedPatient = new Patient()  
         {  
-            Email = "PatientMail@mail.com",
-            SSN = "2201960000",
-            Name = "Kristian Hansen Hollænder"
-        };
-
-        var expectedPatient = new Patient()
-        {
-            Id = 1,
-            Email = "PatientMail@mail.com",
-            SSN = "2201960000",
-            Name = "Kristian Hansen Hollænder"
-        };
-        
-        var mockService = new Mock<IPatientService>();  
-        mockService.Setup(service => service.CreatePatient(It.IsAny<CreatePatientDto>()))  
-            .ReturnsAsync(expectedPatient);
-
-        var controller = new PatientController(mockService.Object);  
+            Id = 1,  
+            Email = "PatientMail@mail.com",  
+            Name = "Kristian Hansen Hollænder"  
+        };  
+      
+        var mockService = new Mock<IPatientService>();    
+        mockService.Setup(service => service.CreatePatient(It.IsAny<CreatePatientDto>()))    
+            .ReturnsAsync(expectedPatient);  
   
-        // Act    
-        var result = await controller.AddPatient(dto);  
+        var controller = new PatientController(mockService.Object);    
   
-        // Assert    
-        var objectResult = Assert.IsType<ObjectResult>(result);
-        var patientResult = Assert.IsType<Patient>(objectResult.Value);
+        // Act      
+        var result = await controller.AddPatient(dto);    
+  
+        // Assert      
+        var objectResult = Assert.IsType<ObjectResult>(result);  
         Assert.Equal(201, objectResult.StatusCode);
-        Assert.Equal(expectedPatient, patientResult);
-    }
+        Assert.NotNull(objectResult.Value); 
+      
+        var patientResult = Assert.IsType<Patient>(objectResult.Value); 
+      
+        Assert.Equal(expectedPatient.Id, patientResult.Id);  
+        Assert.Equal(expectedPatient.Email, patientResult.Email);  
+        Assert.Equal(expectedPatient.SSN, patientResult.SSN);  
+        Assert.Equal(expectedPatient.Name, patientResult.Name);  
+    }  
+
+    [Fact]  
+    public async Task FailingTest()    
+    {  
+        // Arrange      
+        var dto = new CreatePatientDto()  
+        {    
+            Email = "PatientMail@mail.com",  
+            SSN = "2201960000",  
+            Name = "Kristian Hansen Hollænder"  
+        };  
+  
+        var expectedPatient = new Patient()  
+        {  
+            Id = 1,  
+            Email = "PatientMail@mail.com",  
+            Name = "Kristian Hansen Hollænder"  
+        };  
+      
+        var mockService = new Mock<IPatientService>();    
+        mockService.Setup(service => service.CreatePatient(It.IsAny<CreatePatientDto>()))    
+            .ReturnsAsync(expectedPatient);  
+  
+        var controller = new PatientController(mockService.Object);    
+  
+        // Act      
+        var result = await controller.AddPatient(dto);    
+  
+        // Assert      
+        var objectResult = Assert.IsType<ObjectResult>(result);  
+        Assert.Equal(201, objectResult.StatusCode);
+        Assert.NotNull(objectResult.Value); 
+      
+        var patientResult = Assert.IsType<Patient>(objectResult.Value); 
+      
+        Assert.Equal(expectedPatient.Id, patientResult.Id);  
+        Assert.Equal(expectedPatient.Name, patientResult.Email);  //Should fail here
+        Assert.Equal(expectedPatient.SSN, patientResult.SSN);  
+        Assert.Equal(expectedPatient.Name, patientResult.Name);  
+    }  
     
     [Fact]  
     public async Task TestGetPatients_ReturnsListOfPatients()  
