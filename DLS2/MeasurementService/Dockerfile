@@ -8,7 +8,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["DLS2/MeasurementService/MeasurementService.csproj", "DLS2/MeasurementService/"]
 COPY ["DLS2/Monitoring/Monitoring.csproj", "DLS2/Monitoring/"]
-COPY ["DLS2/Cache/Cache.csproj", "/app/Cache/"]
+COPY ["DLS2/Cache/Cache.csproj", "/app/"]
 RUN dotnet restore "./DLS2/MeasurementService/MeasurementService.csproj"
 COPY . .
 WORKDIR "/src/DLS2/MeasurementService"
