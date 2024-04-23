@@ -43,46 +43,6 @@ public class PatientApiTest
     }  
 
     [Fact]  
-    public async Task FailingTest()    
-    {  
-        // Arrange      
-        var dto = new CreatePatientDto()  
-        {    
-            Email = "PatientMail@mail.com",  
-            SSN = "2201960000",  
-            Name = "Kristian Hansen Hollænder"  
-        };  
-  
-        var expectedPatient = new Patient()  
-        {  
-            Id = 1,  
-            Email = "PatientMail@mail.com",  
-            Name = "Kristian Hansen Hollænder"  
-        };  
-      
-        var mockService = new Mock<IPatientService>();    
-        mockService.Setup(service => service.CreatePatient(It.IsAny<CreatePatientDto>()))    
-            .ReturnsAsync(expectedPatient);  
-  
-        var controller = new PatientController(mockService.Object);    
-  
-        // Act      
-        var result = await controller.AddPatient(dto);    
-  
-        // Assert      
-        var objectResult = Assert.IsType<ObjectResult>(result);  
-        Assert.Equal(201, objectResult.StatusCode);
-        Assert.NotNull(objectResult.Value); 
-      
-        var patientResult = Assert.IsType<Patient>(objectResult.Value); 
-      
-        Assert.Equal(expectedPatient.Id, patientResult.Id);  
-        Assert.Equal(expectedPatient.Name, patientResult.Email);  //Should fail here
-        Assert.Equal(expectedPatient.SSN, patientResult.SSN);  
-        Assert.Equal(expectedPatient.Name, patientResult.Name);  
-    }  
-    
-    [Fact]  
     public async Task TestGetPatients_ReturnsListOfPatients()  
     {  
         // Arrange  
