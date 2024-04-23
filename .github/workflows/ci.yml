@@ -73,9 +73,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           
-      - name: Build and push MeasurementService image
+      - name: Build and push APIGateway image
         uses: docker/build-push-action@v5
         with:
-          file: ././DLS2/MeasurementService/Dockerfile
+          file: ././DLS2/APIGateWay/Dockerfile
           push: true
-          tags: dls/measurement:latest
+          tags: dls/apigateway:latest
