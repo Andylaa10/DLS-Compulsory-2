@@ -60,7 +60,7 @@ jobs:
         run: npm run build
         working-directory: ./PatientUI
   
-  deploy_docker_image:
+  deploy_docker_images:
     name: Push docker images to Docker Hub
     runs-on: ubuntu-latest
     steps:
