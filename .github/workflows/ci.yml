@@ -79,3 +79,31 @@ jobs:
           file: ././DLS2/MeasurementService/Dockerfile
           push: true
           tags: dls/measurement:latest
+      
+      - name: Build and push PatientService image
+        uses: docker/build-push-action@v5
+        with:
+          file: ././DLS2/PatientService/Dockerfile
+          push: true
+          tags: dls/patient:latest
+      
+      - name: Build and push APIGateway image
+        uses: docker/build-push-action@v5
+        with: 
+          file: ././DLS2/APIGateway/Dockerfile
+          push: true
+          tags: dls/apigateway:latest 
+
+      - name: Build and push DoctorUI image
+        uses: docker/build-push-action@v5
+        with:
+          file: ././DoctorUI/Dockerfile
+          push: true
+          tags: dls/doctorui:latest
+
+      - name: Build and push DoctorUI image
+        uses: docker/build-push-action@v5
+        with:
+          file: ././PatientUI/Dockerfile
+          push: true
+          tags: dls/patientui:latest
