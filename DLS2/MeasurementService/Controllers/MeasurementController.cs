@@ -69,8 +69,7 @@ public class MeasurementController : ControllerBase
     {
         try
         {
-            await _measurementService.DeleteMeasurement(id);
-            return Ok();
+            return Ok(await _measurementService.DeleteMeasurement(id));
         }
         catch (Exception e)
         {
@@ -85,8 +84,7 @@ public class MeasurementController : ControllerBase
     {
         try
         {
-            await _measurementService.UpdateMeasurement(id, dto);
-            return Ok();
+            return Ok(await _measurementService.UpdateMeasurement(id, dto));
         }
         catch (Exception e)
         {

@@ -65,12 +65,14 @@ public class PatientRepository : IPatientRepository
         return await _context.Patients.FirstOrDefaultAsync(p => p.SSN == ssn) ?? throw new NullReferenceException();
     }
 
-    public async Task DeletePatient(string ssn)
+    public async Task<Patient> DeletePatient(string ssn)
     {
         var patient = await _context.Patients.FirstOrDefaultAsync(p => p.SSN == ssn) ??
                       throw new NullReferenceException();
         _context.Patients.Remove(patient);
         await _context.SaveChangesAsync();
+
+        return patient;
     }
 
     public async Task<Patient> CreatePatient(Patient patient)

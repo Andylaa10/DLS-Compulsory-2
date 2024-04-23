@@ -62,13 +62,13 @@ public class PatientService : IPatientService
         return await _patientRepository.GetPatientBySsn(ssn);
     }
 
-    public async Task DeletePatient(string ssn)
+    public async Task<Patient> DeletePatient(string ssn)
     {
         using var activity = _tracer.StartActiveSpan("DeletePatient");
 
         Logging.Log.Information("Called DeletePatient function");
 
-        await _patientRepository.DeletePatient(ssn);
+        return await _patientRepository.DeletePatient(ssn);
     }
 
     public async Task<Patient> CreatePatient(CreatePatientDto patient)
