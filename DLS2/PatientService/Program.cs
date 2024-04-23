@@ -7,7 +7,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDependencyInjection();
-builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -20,10 +19,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(options =>
 {
-    options.SetIsOriginAllowed(origin => true)
+    options
         .AllowAnyHeader()
         .AllowAnyMethod()
-        .AllowCredentials();
+        .AllowAnyOrigin();
 });
 
 app.UseAuthorization();

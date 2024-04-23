@@ -1,15 +1,16 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Patient} from "../models/patient.model";
 import {PaginatedResult} from "../models/helper/paginatedResult.model";
 import {CreatePatientDto} from "../dtos/createPatient.dto";
+import {H} from "@angular/cdk/keycodes";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatientService {
-  private _apiEndpoint: string = "http://localhost:5206/api/Patient"
+  private _apiEndpoint: string = "http://localhost:9092/api/Patient"
 
   private _http: HttpClient = inject(HttpClient);
 
@@ -30,6 +31,7 @@ export class PatientService {
   }
 
   createPatient(dto: CreatePatientDto){
-    return this._http.post(`${this._apiEndpoint}/CreatePatient`, dto);
+    return this._http.post(`${this._apiEndpoint}/CreatePatient`, dto, {
+    });
   }
 }
