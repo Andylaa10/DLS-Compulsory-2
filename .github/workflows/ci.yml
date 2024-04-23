@@ -76,6 +76,6 @@ jobs:
       - name: Build and push MeasurementService image
         uses: docker/build-push-action@v5
         with:
-          context: ././DLS2/MeasurementService/
+          file: ././DLS2/MeasurementService/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dls/measeurementservice:latest
