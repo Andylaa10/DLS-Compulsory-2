@@ -73,9 +73,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           
-      - name: Build and push MeasurementService image
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ././DLS2/MeasurementService/
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/dls/measeurementservice:latest
+          tags: user/app:latest
