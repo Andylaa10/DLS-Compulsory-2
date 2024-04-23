@@ -2,11 +2,11 @@
 # It will run on every push to the development branch
 # It will also run on every pull request to the development branch
 
-name: .NET
+name: Continuous Integration
 
 on:
   push:
-    branches: [ "development", "main" ]
+    branches: [ "development", "main", "pipeline_setup" ]
 
 jobs:
   validate_backend:
@@ -28,8 +28,8 @@ jobs:
         run: dotnet test --no-build --verbosity normal
         working-directory: ./DLS2
         
-  validate_doctor_frontend:
-    name: validate doctor frontend
+  validate_frontend_doctor:
+    name: validate frontend doctor
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,8 +44,8 @@ jobs:
         run: npm run build
         working-directory: ./DoctorUI
         
-  validate_patient_frontend:
-    name: validate patient frontend
+  validate_frontend_patient:
+    name: validate frontend patient
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -59,3 +59,23 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: ./PatientUI
+  
+  deploy_docker_images:
+    name: Push docker images to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3 
+      
+      - name: Login to Docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          
+      - name: Build and push APIGateway image
+        uses: docker/build-push-action@v5
+        with:
+          context: APIGateway/
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/DLS/APIGateway:latest
