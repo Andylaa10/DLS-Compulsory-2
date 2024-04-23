@@ -99,8 +99,7 @@ public class PatientController : ControllerBase
     {
         try
         {
-            await _patientService.DeletePatient(ssn);
-            return Ok();
+            return Ok(await _patientService.DeletePatient(ssn));
         }
         catch (Exception e)
         {

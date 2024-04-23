@@ -1,4 +1,5 @@
-﻿using MeasurementService.Core.Entities;
+﻿using System.Diagnostics.Metrics;
+using MeasurementService.Core.Entities;
 using MeasurementService.Core.Entities.Helper;
 using MeasurementService.Core.Helper;
 using MeasurementService.Core.Repositories.Interfaces;
@@ -49,15 +50,16 @@ public class MeasurementRepository : IMeasurementRepository
         return measurement;
     }
 
-    public async Task DeleteMeasurement(int id)
+    public async Task<Measurement> DeleteMeasurement(int id)
     {
         var measurement = await _context.Measurements.FirstOrDefaultAsync(m => m.Id == id) ??
                           throw new NullReferenceException();
         _context.Measurements.Remove(measurement);
         await _context.SaveChangesAsync();
+        return measurement;
     }
 
-    public async Task UpdateMeasurement(int id, Measurement measurement)
+    public async Task<Measurement> UpdateMeasurement(int id, Measurement measurement)
     {
         var measurementToUpdate = await _context.Measurements.FirstOrDefaultAsync(m => m.Id == id) ??
                                   throw new NullReferenceException();
@@ -70,6 +72,8 @@ public class MeasurementRepository : IMeasurementRepository
 
         _context.Update(measurementToUpdate);
         await _context.SaveChangesAsync();
+
+        return measurementToUpdate;
     }
 
     public async Task RebuildDatabase()
