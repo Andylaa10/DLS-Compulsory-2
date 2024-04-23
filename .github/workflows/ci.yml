@@ -76,6 +76,6 @@ jobs:
       - name: Build and push APIGateway image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ././DLS2/APIGateway/
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dls/apigateway:latest
