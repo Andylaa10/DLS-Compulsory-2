@@ -3,18 +3,18 @@
     <button mat-stroked-button color="warn" class="close-btn" (click)="closeDialog()">Close</button>
   </div>
   <div class="form-field-placement" [formGroup]="createPatientForm">
-    <mat-form-field appearance="fill" color="accent" formControlName="ssnControl">
+    <mat-form-field appearance="fill" color="accent">
       <mat-label>SSN</mat-label>
-      <input matInput placeholder="1234567899" maxlength="10">
+      <input matInput placeholder="1234567899" maxlength="10" formControlName="ssnControl">
     </mat-form-field>
-    <mat-form-field appearance="fill" color="accent" formControlName="emailControl">
+    <mat-form-field appearance="fill" color="accent">
       <mat-label>Email</mat-label>
-      <input matInput placeholder="Example@gmail.com">
+      <input matInput placeholder="Example@gmail.com" formControlName="emailControl">
     </mat-form-field>
-    <mat-form-field appearance="fill" color="accent" formControlName="nameControl">
+    <mat-form-field appearance="fill" color="accent">
       <mat-label>Name</mat-label>
-      <input matInput placeholder="John Doe">
+      <input matInput placeholder="John Doe" formControlName="nameControl">
     </mat-form-field>
   </div>
-    <button [disabled]="createPatientForm.hasError()" mat-raised-button color="primary" class="create-btn">Create</button>
+    <button [disabled]="createPatientForm.invalid" mat-raised-button color="primary" class="create-btn" (click)="createPatient()">Create</button>
 </div>

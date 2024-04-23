@@ -102,6 +102,7 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._destroyed$.next();
+    this._destroyed$.complete();
   }
 
   // Sets the selected patient, and send it to the home component

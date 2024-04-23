@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Patient} from "../models/patient.model";
 import {PaginatedResult} from "../models/helper/paginatedResult.model";
+import {CreatePatientDto} from "../dtos/createPatient.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,9 @@ export class PatientService {
 
   paginatedPatients(pageNumber: number, pageSize: number) : Observable<PaginatedResult<Patient>>{
    return this._http.get<PaginatedResult<Patient>>(`${this._apiEndpoint}/GetPatientPage?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
+
+  createPatient(dto: CreatePatientDto){
+    return this._http.post(`${this._apiEndpoint}/CreatePatient`, dto);
   }
 }
