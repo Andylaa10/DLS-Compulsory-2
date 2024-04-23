@@ -1,1 +1,18 @@
-<p>home works!</p>
+<div class="content">
+  <div class="patient-table">
+    <app-patient-table></app-patient-table>
+  </div>
+  <div class="show-patient-details-components">
+    <div>
+      <div id="selectedPatient" class="dropzone" cdkDrop
+           cdkDropList
+           [cdkDropListData]="selectedPatient"
+           (cdkDropListDropped)="drop($event)">
+        <p class="text-animation">Drag Patient</p></div>
+    </div>
+    <div>
+      <app-patient-details [patient]="selectedPatient"></app-patient-details>
+    </div>
+  </div>
+</div>
+

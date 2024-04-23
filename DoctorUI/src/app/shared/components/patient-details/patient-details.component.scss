@@ -1,0 +1,49 @@
+.content {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.example-card {
+  margin-top: 20px;
+  background-color: #00000033;
+}
+
+mat-expansion-panel {
+  margin-top: 20px;
+}
+
+mat-expansion-panel-header {
+  width: 600px;
+  height: 100px;
+}
+
+.header-placement {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 90%;
+  justify-content: space-between;
+}
+
+hr {
+  height: 2px;
+  background-color: #ffffff;
+}
+
+.field {
+  font-weight: bolder;
+}
+
+.id {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 50px;
+  background-color: #02448B;
+  border-radius: 50%
+}

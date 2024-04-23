@@ -21,17 +21,18 @@ public class MeasurementRepository : IMeasurementRepository
         return await _context.Measurements.Where(m => m.SSN == ssn).ToListAsync();
     }
 
-    public async Task<PaginationResult<Measurement>> GetAllMeasurementsBySsnPaginated(string ssn, int pageNumber, int pageSize)
+    public async Task<PaginationResult<Measurement>> GetAllMeasurementsBySsnPaginated(string ssn, int pageNumber,
+        int pageSize)
     {
         var query = _context.Measurements.Where(m => m.SSN == ssn);
-        
+
         var totalCount = await query.CountAsync();
 
         var measurements = await query
             .Skip(pageNumber * pageSize)
             .Take(pageSize)
             .ToListAsync();
-        
+
         var result = new PaginationResult<Measurement>
         {
             Items = measurements,
@@ -61,15 +62,14 @@ public class MeasurementRepository : IMeasurementRepository
         var measurementToUpdate = await _context.Measurements.FirstOrDefaultAsync(m => m.Id == id) ??
                                   throw new NullReferenceException();
 
-        if (measurement.Id == id)
-        {
-            measurementToUpdate.ViewedByDoctor = measurement.ViewedByDoctor;
-            measurementToUpdate.Diastolic = measurement.Diastolic;
-            measurementToUpdate.Systolic = measurement.Systolic;
+        if (measurement.Id != id) throw new ArgumentException("Id in the route does not match with measurement id");
+        
+        measurementToUpdate.ViewedByDoctor = measurement.ViewedByDoctor;
+        measurementToUpdate.Diastolic = measurement.Diastolic;
+        measurementToUpdate.Systolic = measurement.Systolic;
 
-            _context.Update(measurementToUpdate);
-            await _context.SaveChangesAsync();
-        }
+        _context.Update(measurementToUpdate);
+        await _context.SaveChangesAsync();
     }
 
     public async Task RebuildDatabase()
