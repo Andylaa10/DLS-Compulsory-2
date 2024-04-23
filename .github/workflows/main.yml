@@ -2,7 +2,7 @@
 # It will run on every push to the development branch
 # It will also run on every pull request to the development branch
 
-name: Continuous Integration
+name: CI/CD - Test, Validate and Deploy
 
 on:
   push:
