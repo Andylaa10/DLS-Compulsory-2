@@ -56,7 +56,7 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
   private _patientService: PatientService = inject(PatientService);
   private _dialog: MatDialog = inject(MatDialog);
 
-  displayedColumns: string[] = ['id', 'ssn', 'email', 'name', 'action'];
+  displayedColumns: string[] = ['ssn', 'email', 'name', 'action'];
   dataSource!: MatTableDataSource<Patient>;
   pageNumber: number = 0;
   totalCount: number = 0;
@@ -87,7 +87,12 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
   search(): void {
     fromEvent(this.searchInput.nativeElement, 'keyup').pipe(debounceTime(500), takeUntil(this._destroyed$)).subscribe(() => {
       const searchTerm = (this.searchInput.nativeElement as HTMLInputElement).value;
-
+      if (!searchTerm) {
+        this.getPatients(this.pageNumber, this.pageSize);
+      } else
+        this._patientService.searchPatients(searchTerm, this.pageNumber, this.pageSize).subscribe(result => {
+          this.updateDataSource(result);
+        });
     })
   }
 
