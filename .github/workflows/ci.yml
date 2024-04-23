@@ -78,4 +78,4 @@ jobs:
         with:
           file: ././DLS2/MeasurementService/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/dls/measeurementservice:latest
+          tags: dls/measurement:latest
