@@ -78,4 +78,4 @@ jobs:
         with:
           context: APIGateway/
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/DLS/APIGateway:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/dls/apigateway:latest
