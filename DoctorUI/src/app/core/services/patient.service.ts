@@ -10,7 +10,7 @@ import {H} from "@angular/cdk/keycodes";
   providedIn: 'root'
 })
 export class PatientService {
-  private _apiEndpoint: string = "http://localhost:9092/api/Patient"
+  private _apiEndpoint: string = "http://localhost:5206/api/Patient"
 
   private _http: HttpClient = inject(HttpClient);
 
@@ -30,9 +30,12 @@ export class PatientService {
    return this._http.get<PaginatedResult<Patient>>(`${this._apiEndpoint}/GetPatientPage?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 
-  createPatient(dto: CreatePatientDto): Observable<Patient> {
+  createPatient(dto: CreatePatientDto) Observable<Patient> {
     return this._http.post<Patient>(`${this._apiEndpoint}/CreatePatient`, dto, {
-    });
+      headers: {
+        country: 'denmark'
+        }
+    }
   }
 
   deletePatient(ssn: number): Observable<Patient> {

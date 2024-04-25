@@ -21,6 +21,13 @@ public static class DependencyInjectionConfig
 
         //Automapper
         services.AddSingleton(AutoMapperConfig.ConfigureAutomapper());
+
+        //Tracing
+        var serviceName = "MyTracer";
+        var serviceVersion = "1.0.0";
+        
+        services.AddOpenTelemetry().Setup();
+        services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
         
         //Caching
         services.AddSingleton(RedisClientFactory.CreateRedisClient());

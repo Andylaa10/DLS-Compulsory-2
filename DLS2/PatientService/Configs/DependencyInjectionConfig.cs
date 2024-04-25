@@ -1,4 +1,5 @@
 ﻿using Cache;
+using FeatureHub;
 using Monitoring;
 using OpenTelemetry.Trace;
 using PatientService.Core.Helper;
@@ -22,7 +23,17 @@ public static class DependencyInjectionConfig
         //Automapper
         services.AddSingleton(AutoMapperConfig.ConfigureAutomapper());
         
+        //Tracing
+        var serviceName = "MyTracer";
+        var serviceVersion = "1.0.0";
+        
+        services.AddOpenTelemetry().Setup();
+        services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
+        
         //Caching
         services.AddSingleton(RedisClientFactory.CreateRedisClient());
+        
+        //FeatureHub
+        services.AddSingleton(FeatureHubFactory.CreateFeatureHub());
     }
 }
