@@ -4,10 +4,10 @@ WORKDIR /app
 
 EXPOSE 3000
 
-COPY /PatientUI2/package*.json .
+COPY /PatientUI/package*.json .
 
 RUN npm install
 
-COPY /PatientUI2/. ./
+COPY /PatientUI/. ./
 
 CMD ["npm", "run", "dev"]
