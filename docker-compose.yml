@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 services:
 #Cache
   redis:
@@ -32,6 +32,15 @@ services:
       - "1434:1433"
     volumes:
       - mssql_data_measurement_db:/var/opt/mssql
+  
+#Feature flags
+  featurehub:
+    image: featurehub/party-server:latest
+    restart: always
+    volumes:
+      - featurehub-h2-data:/db
+    ports:
+      - 8085:8085
 
 #Monitoring
   seq:
@@ -106,6 +115,8 @@ services:
         condition: service_started
       apigateway:
         condition: service_started
+      featurehub:
+        condition: service_started
 
 #Frontend
   doctor-ui:
@@ -140,6 +151,8 @@ volumes:
   zipkin_data:
   mssql_data_measurement_db:
   mssql_data_patient_db:
+  featurehub-h2-data:
+    
 networks:
   local_network:
     driver: bridge

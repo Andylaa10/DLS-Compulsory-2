@@ -6,7 +6,7 @@ namespace Monitoring;
 
 public static class Tracing
 {
-    public static IOpenTelemetryBuilder Setup(this IOpenTelemetryBuilder builder)
+    public static OpenTelemetryBuilder Setup(this OpenTelemetryBuilder builder)
     {
         var serviceName = "MyTracer";
         var serviceVersion = "1.0.0";

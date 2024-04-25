@@ -1,5 +1,6 @@
+using FeatureHub;
 using Microsoft.AspNetCore.Mvc;
-using PatientService.Core.Entities;
+using Microsoft.IdentityModel.Tokens;
 using PatientService.Core.Services.DTOs;
 using PatientService.Core.Services.Interfaces;
 
@@ -10,10 +11,12 @@ namespace PatientService.Controllers;
 public class PatientController : ControllerBase
 {
     private readonly IPatientService _patientService;
+    private readonly FeatureHubClient _featureHubClient;
 
-    public PatientController(IPatientService patientService)
+    public PatientController(IPatientService patientService, FeatureHubClient featureHubClient)
     {
         _patientService = patientService;
+        _featureHubClient = featureHubClient;
     }
 
     [HttpGet]
@@ -85,6 +88,13 @@ public class PatientController : ControllerBase
     {
         try
         {
+            var country = HttpContext.Request.Headers["country"];
+            if (country.IsNullOrEmpty()) return BadRequest("No country provided");
+            
+            var feature = await _featureHubClient.IsCountryAllowed(country);
+            
+            if (!feature) return StatusCode(403, $"Method not allowed in {country}");
+            
             return StatusCode(201, await _patientService.CreatePatient(patient));
         }
         catch (Exception e)
@@ -99,6 +109,14 @@ public class PatientController : ControllerBase
     {
         try
         {
+            var country = HttpContext.Request.Headers["country"];
+            if (country.IsNullOrEmpty()) return BadRequest("No country provided");
+            
+            var feature = await _featureHubClient.IsCountryAllowed(country);
+            
+            if (!feature) return StatusCode(403, $"Method not allowed in {country}");
+
+            
             return Ok(await _patientService.DeletePatient(ssn));
         }
         catch (Exception e)

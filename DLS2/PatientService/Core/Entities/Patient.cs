@@ -3,8 +3,7 @@
 namespace PatientService.Core.Entities;
 
 public class Patient
-{
-    public int Id { get; set; }
+{ 
     [MinLength(10)] [MaxLength(10)] public string SSN { get; set; }
 
     [EmailAddress] public string Email { get; set; }

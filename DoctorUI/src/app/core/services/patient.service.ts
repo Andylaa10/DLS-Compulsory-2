@@ -10,7 +10,7 @@ import {H} from "@angular/cdk/keycodes";
   providedIn: 'root'
 })
 export class PatientService {
-  private _apiEndpoint: string = "http://localhost:9092/api/Patient"
+  private _apiEndpoint: string = "http://localhost:5206/api/Patient"
 
   private _http: HttpClient = inject(HttpClient);
 
@@ -32,6 +32,9 @@ export class PatientService {
 
   createPatient(dto: CreatePatientDto){
     return this._http.post(`${this._apiEndpoint}/CreatePatient`, dto, {
+      headers: {
+        country: 'denmark'
+      }
     });
   }
 }

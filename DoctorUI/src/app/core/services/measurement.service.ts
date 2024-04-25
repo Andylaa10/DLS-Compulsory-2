@@ -8,7 +8,7 @@ import {UpdateMeasurementDto} from "../dtos/updateMeasurement.dto";
   providedIn: 'root'
 })
 export class MeasurementService {
-  private _apiEndpoint: string = "http://localhost:9090/api/Measurement"
+  private _apiEndpoint: string = "http://localhost:5206/api/Measurement"
 
   private _http: HttpClient = inject(HttpClient);
 
