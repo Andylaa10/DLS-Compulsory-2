@@ -16,8 +16,8 @@ export class MeasurementService {
     return this._http.get<Measurement[]>(`${this._apiEndpoint}/${ssn}`);
   }
 
-  updateMeasurement(id: number, dto: UpdateMeasurementDto){
-    return this._http.put(`${this._apiEndpoint}/UpdateMeasurement/${id}`, dto);
+  updateMeasurement(id: number, dto: UpdateMeasurementDto): Observable<Measurement>{
+    return this._http.put<Measurement>(`${this._apiEndpoint}/UpdateMeasurement/${id}`, dto);
   }
 }
 

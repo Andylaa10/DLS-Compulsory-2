@@ -1,6 +1,6 @@
 <div class="content mat-elevation-z8">
   <div>
-    <div style="margin-bottom: 10px; width: 100%; display: flex; justify-content: flex-end">
+    <div class="add-btn-placement">
       <button mat-mini-fab matTooltip="Create Patient" color="primary" matTooltipPosition="left" (click)="openCreatePatientDialog()">
         <mat-icon>add</mat-icon>
       </button>
@@ -19,9 +19,15 @@
       @for (header of displayedColumns; track $index) {
         <ng-container [matColumnDef]="header">
           <th mat-header-cell *matHeaderCellDef>{{ header }}</th>
+          @if (header === 'action') {
+      <td class="drag-row" mat-cell *matCellDef="let patient"><mat-icon class="delete-button" (click)="deletePatient(patient['ssn'])">delete</mat-icon></td>
+      }
           <td class="drag-row" mat-cell *matCellDef="let patient">{{ patient[header] }}</td>
+
         </ng-container>
       }
+
+
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row class="drag-row" *matRowDef="let row; columns: displayedColumns;" cdkDrag

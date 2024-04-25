@@ -30,11 +30,16 @@ export class PatientService {
    return this._http.get<PaginatedResult<Patient>>(`${this._apiEndpoint}/GetPatientPage?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 
-  createPatient(dto: CreatePatientDto){
-    return this._http.post(`${this._apiEndpoint}/CreatePatient`, dto, {
+  createPatient(dto: CreatePatientDto) Observable<Patient> {
+    return this._http.post<Patient>(`${this._apiEndpoint}/CreatePatient`, dto, {
       headers: {
         country: 'denmark'
-      }
-    });
+        }
+    }
   }
+
+  deletePatient(ssn: number): Observable<Patient> {
+    return this._http.delete<Patient>(`${this._apiEndpoint}/DeletePatient/` + ssn)
+  }
+
 }

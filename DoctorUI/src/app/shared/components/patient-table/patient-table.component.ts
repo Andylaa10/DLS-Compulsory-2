@@ -56,7 +56,7 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
   private _patientService: PatientService = inject(PatientService);
   private _dialog: MatDialog = inject(MatDialog);
 
-  displayedColumns: string[] = ['id', 'ssn', 'email', 'name'];
+  displayedColumns: string[] = ['ssn', 'email', 'name', 'action'];
   dataSource!: MatTableDataSource<Patient>;
   pageNumber: number = 0;
   totalCount: number = 0;
@@ -87,8 +87,12 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
   search(): void {
     fromEvent(this.searchInput.nativeElement, 'keyup').pipe(debounceTime(500), takeUntil(this._destroyed$)).subscribe(() => {
       const searchTerm = (this.searchInput.nativeElement as HTMLInputElement).value;
-
-      console.log(searchTerm);
+      if (!searchTerm) {
+        this.getPatients(this.pageNumber, this.pageSize);
+      } else
+        this._patientService.searchPatients(searchTerm, this.pageNumber, this.pageSize).subscribe(result => {
+          this.updateDataSource(result);
+        });
     })
   }
 
@@ -117,7 +121,6 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
       this.loading.set(false);
       return of();
     })).subscribe((patients: PaginatedResult<Patient>) => {
-      console.log(patients)
       this.updateDataSource(patients);
     })
   }
@@ -144,7 +147,27 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
 
 
     dialog.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      this.getPatients(this.pageNumber, this.pageSize);
     });
   }
+
+  deletePatient(ssn: number) {
+    const confirmation = window.confirm("Are you sure you want to delete this patient?");
+    if (!confirmation) {
+      return; // Do nothing if user cancels the deletion
+    }
+
+    this._patientService.deletePatient(ssn)
+      .pipe(
+        takeUntil(this._destroyed$),
+        catchError(() => {
+          this.loading.set(false);
+          return of();
+        })
+      )
+      .subscribe(result => {
+        this.getPatients(this.pageNumber, this.pageSize);
+      });
+  }
+
 }

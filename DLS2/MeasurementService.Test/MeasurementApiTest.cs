@@ -62,7 +62,7 @@ public class MeasurementApiTest
         var result = await controller.UpdateMeasurement(measurementId, updateMeasurementDto);  
 
         // Assert  
-        var okResult = Assert.IsType<OkResult>(result);  
+        var okResult = Assert.IsType<OkObjectResult>(result);  
         Assert.Equal(200, okResult.StatusCode);  
     }
 
