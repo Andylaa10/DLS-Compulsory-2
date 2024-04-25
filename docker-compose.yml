@@ -98,7 +98,7 @@ services:
       context: .
       dockerfile: ./DLS2/PatientService/Dockerfile
     ports:
-      - '9092:80'
+      - '9092w:80'
     depends_on:
       redis:
         condition: service_healthy
