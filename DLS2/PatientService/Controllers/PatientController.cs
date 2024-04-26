@@ -12,7 +12,7 @@ public class PatientController : ControllerBase
 {
     private readonly IPatientService _patientService;
     private readonly FeatureHubClient _featureHubClient;
-
+    
     public PatientController(IPatientService patientService, FeatureHubClient featureHubClient)
     {
         _patientService = patientService;

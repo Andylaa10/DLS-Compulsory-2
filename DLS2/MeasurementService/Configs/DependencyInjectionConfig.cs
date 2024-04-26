@@ -24,7 +24,6 @@ public static class DependencyInjectionConfig
 
         //Tracing
         var serviceName = "MyTracer";
-        var serviceVersion = "1.0.0";
         
         services.AddOpenTelemetry().Setup();
         services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));

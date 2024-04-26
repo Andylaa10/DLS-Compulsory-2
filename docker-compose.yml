@@ -46,22 +46,12 @@ services:
   seq:
     image: datalust/seq:latest
     ports:
-      - "5345:80"
+      - "5341:5341"
+      - "5342:80"
     volumes:
       - seq_data:/data
-    networks:
-      - local_network
     environment:
       ACCEPT_EULA: "Y"
-
-  zipkin-storage:
-    image: openzipkin/zipkin-mysql
-    ports:
-      - "3306:3306"
-    volumes:
-      - zipkin_data:/mysql/data
-    networks:
-      - local_network
 
   zipkin:
     image: openzipkin/zipkin
@@ -73,11 +63,22 @@ services:
       - MYSQL_USER=zipkin
       - MYSQL_PASS=zipkin
     depends_on:
-      - zipkin-storage
+      zipkin-storage:
+        condition: service_healthy
     networks:
       - local_network
 
-#APIS
+  zipkin-storage:
+    image: openzipkin/zipkin-mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - zipkin_data:/mysql/data
+    networks:
+      - local_network
+  
+  
+  #APIS
   apigateway:
     image: apigateway
     build:
@@ -100,6 +101,10 @@ services:
         condition: service_started
       apigateway:
         condition: service_started
+      seq:
+        condition: service_started
+      zipkin:
+        condition: service_started
 
   patient-service:
     image: patientservice
@@ -116,6 +121,10 @@ services:
       apigateway:
         condition: service_started
       featurehub:
+        condition: service_started
+      seq:
+        condition: service_started
+      zipkin:
         condition: service_started
 
 #Frontend

@@ -15,7 +15,7 @@ public class PatientApiTest
   
         var expectedPatient = new Patient()  
         {  
-            Id = 1,  
+            SSN = "2201960000",  
             Email = "PatientMail@mail.com",  
             Name = "Kristian Hansen Hollænder"  
         };  
@@ -36,7 +36,6 @@ public class PatientApiTest
       
         var patientResult = Assert.IsType<Patient>(objectResult.Value); 
       
-        Assert.Equal(expectedPatient.Id, patientResult.Id);  
         Assert.Equal(expectedPatient.Email, patientResult.Email);  
         Assert.Equal(expectedPatient.SSN, patientResult.SSN);  
         Assert.Equal(expectedPatient.Name, patientResult.Name);  

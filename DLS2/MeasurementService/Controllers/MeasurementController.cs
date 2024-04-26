@@ -8,11 +8,14 @@ namespace MeasurementService.Controllers;
 [Route("api/[controller]")]
 public class MeasurementController : ControllerBase
 {
+    private readonly ILogger<MeasurementController> _logger;
+
     private readonly IMeasurementService _measurementService;
 
-    public MeasurementController(IMeasurementService measurementService)
+    public MeasurementController(IMeasurementService measurementService, ILogger<MeasurementController> logger)
     {
         _measurementService = measurementService;
+        _logger = logger;
     }
 
 

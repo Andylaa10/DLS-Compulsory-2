@@ -12,7 +12,7 @@ public static class Logging
         // Serilog
         Serilog.Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Verbose()
-            .WriteTo.Seq("http://seq:5345")
+            .WriteTo.Seq("http://seq:5341")
             .WriteTo.Console()
             .Enrich.WithSpan()
             .CreateLogger();
