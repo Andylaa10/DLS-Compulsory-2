@@ -1,6 +1,8 @@
 using FeatureHub;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Monitoring;
+using OpenTelemetry.Trace;
 using PatientService.Core.Services.DTOs;
 using PatientService.Core.Services.Interfaces;
 
@@ -12,16 +14,20 @@ public class PatientController : ControllerBase
 {
     private readonly IPatientService _patientService;
     private readonly FeatureHubClient _featureHubClient;
+    private Tracer _tracer;
     
-    public PatientController(IPatientService patientService, FeatureHubClient featureHubClient)
+    public PatientController(IPatientService patientService, FeatureHubClient featureHubClient, Tracer tracer)
     {
         _patientService = patientService;
         _featureHubClient = featureHubClient;
+        _tracer = tracer;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllPatients()
     {
+        using var activity = _tracer.StartActiveSpan("GetAllPatients");
+
         try
         {
             return Ok(await _patientService.GetAllPatients());
@@ -36,6 +42,8 @@ public class PatientController : ControllerBase
     [Route("SearchPatients")]
     public async Task<IActionResult> SearchPatients([FromQuery] SearchDto dto)
     {
+        using var activity = _tracer.StartActiveSpan("SearchPatients");
+
         try
         {
             var patients = await _patientService.SearchPatients(dto);
@@ -54,6 +62,8 @@ public class PatientController : ControllerBase
     [Route("GetPatientPage")]
     public async Task<IActionResult> GetAllPatientsPage([FromQuery] PaginationRequestDto dto)
     {
+        using var activity = _tracer.StartActiveSpan("GetAllPatientsPage");
+
         try
         {
             var patients = await _patientService.GetAllPatientsWithPagination(dto);
@@ -72,6 +82,8 @@ public class PatientController : ControllerBase
     [Route("{ssn}")]
     public async Task<IActionResult> GetPatientBySsn([FromRoute] string ssn)
     {
+        using var activity = _tracer.StartActiveSpan("GetPatientBySsn");
+        
         try
         {
             return Ok(await _patientService.GetPatientBySsn(ssn));
@@ -86,6 +98,8 @@ public class PatientController : ControllerBase
     [Route("CreatePatient")]
     public async Task<IActionResult> AddPatient([FromBody] CreatePatientDto patient)
     {
+        using var activity = _tracer.StartActiveSpan("AddPatient");
+
         try
         {
             var country = HttpContext.Request.Headers["country"];
@@ -107,6 +121,8 @@ public class PatientController : ControllerBase
     [Route("DeletePatient/{ssn}")]
     public async Task<IActionResult> DeletePatient([FromRoute] string ssn)
     {
+        using var activity = _tracer.StartActiveSpan("DeletePatient");
+
         try
         {
             var country = HttpContext.Request.Headers["country"];
@@ -129,6 +145,8 @@ public class PatientController : ControllerBase
     [Route("RebuildDb")]
     public async Task<IActionResult> RebuildDatabase()
     {
+        using var activity = _tracer.StartActiveSpan("RebuildDb");
+
         try
         {
             await _patientService.RebuildDatabase();

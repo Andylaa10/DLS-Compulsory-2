@@ -1,6 +1,7 @@
 using MeasurementService.Core.Services.DTOs;
 using MeasurementService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry.Trace;
 
 namespace MeasurementService.Controllers;
 
@@ -9,13 +10,15 @@ namespace MeasurementService.Controllers;
 public class MeasurementController : ControllerBase
 {
     private readonly ILogger<MeasurementController> _logger;
-
+    private Tracer _tracer;
+    
     private readonly IMeasurementService _measurementService;
 
-    public MeasurementController(IMeasurementService measurementService, ILogger<MeasurementController> logger)
+    public MeasurementController(IMeasurementService measurementService, ILogger<MeasurementController> logger, Tracer tracer)
     {
         _measurementService = measurementService;
         _logger = logger;
+        _tracer = tracer;
     }
 
 
@@ -23,6 +26,8 @@ public class MeasurementController : ControllerBase
     [Route("{ssn}")]
     public async Task<IActionResult> GetAllMeasurementsBySsn([FromRoute] string ssn)
     {
+        using var activity = _tracer.StartActiveSpan("GetAllMeasurementsBySsn");
+        
         try
         {
             return Ok(await _measurementService.GetAllMeasurementsBySsn(ssn));
@@ -37,6 +42,8 @@ public class MeasurementController : ControllerBase
     [Route("GetMeasurementPage")]
     public async Task<IActionResult> GetAllMeasurementsBySsnPaginated([FromRoute] string ssn, [FromQuery] PaginationRequestDto dto)
     {
+        using var activity = _tracer.StartActiveSpan("GetMeasurementPage");
+
         try
         {
            var result = await _measurementService.GetAllMeasurementsBySsnPaginated(ssn, dto.PageNumber, dto.PageSize);
@@ -56,6 +63,8 @@ public class MeasurementController : ControllerBase
     [Route("CreateMeasurement")]
     public async Task<IActionResult> CreateMeasurement([FromBody] CreateMeasurementDto measurement)
     {
+        using var activity = _tracer.StartActiveSpan("CreateMeasurement");
+
         try
         {
             return StatusCode(201, await _measurementService.CreateMeasurement(measurement));
@@ -70,6 +79,8 @@ public class MeasurementController : ControllerBase
     [Route("DeleteMeasurement/{id}")]
     public async Task<IActionResult> DeleteMeasurement([FromRoute] int id)
     {
+        using var activity = _tracer.StartActiveSpan("DeleteMeasurement");
+
         try
         {
             return Ok(await _measurementService.DeleteMeasurement(id));
@@ -85,6 +96,8 @@ public class MeasurementController : ControllerBase
     [Route("UpdateMeasurement/{id}")]
     public async Task<IActionResult> UpdateMeasurement([FromRoute] int id, [FromBody] UpdateMeasurementDto dto)
     {
+        using var activity = _tracer.StartActiveSpan("UpdateMeasurement");
+
         try
         {
             return Ok(await _measurementService.UpdateMeasurement(id, dto));
@@ -99,6 +112,8 @@ public class MeasurementController : ControllerBase
     [Route("RebuildDb")]
     public async Task<IActionResult> RebuildDatabase()
     {
+        using var activity = _tracer.StartActiveSpan("RebuildDb");
+
         try
         {
             await _measurementService.RebuildDatabase();

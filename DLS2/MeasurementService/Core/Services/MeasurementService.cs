@@ -31,7 +31,7 @@ public class MeasurementService : IMeasurementService
     {
         using var activity = _tracer.StartActiveSpan("GetAllMeasurementsBySsn");
         
-        Logging.Log.Information("Called GetAllMeasurementsBySsn function");
+        LoggingService.Log.Information("Called GetAllMeasurementsBySsn function");
 
         return await _measurementRepository.GetAllMeasurementsBySsn(ssn);
     }
@@ -40,7 +40,7 @@ public class MeasurementService : IMeasurementService
     {
         using var activity = _tracer.StartActiveSpan("GetAllMeasurementsBySsnPaginated");
         
-        Logging.Log.Information("Called GetAllMeasurementsBySsnPaginated function");
+        LoggingService.Log.Information("Called GetAllMeasurementsBySsnPaginated function");
         
         return await _measurementRepository.GetAllMeasurementsBySsnPaginated(ssn, pageNumber, pageSize);
     }
@@ -50,7 +50,7 @@ public class MeasurementService : IMeasurementService
     {
         using var activity = _tracer.StartActiveSpan("CreateMeasurement");
         
-        Logging.Log.Information("Called CreateMeasurement function");
+        LoggingService.Log.Information("Called CreateMeasurement function");
         
         return await _measurementRepository.CreateMeasurement(_mapper.Map<Measurement>(measurement));
     }
@@ -59,7 +59,7 @@ public class MeasurementService : IMeasurementService
     {
         using var activity = _tracer.StartActiveSpan("DeleteMeasurement");
         
-        Logging.Log.Information("Called DeleteMeasurement function");
+        LoggingService.Log.Information("Called DeleteMeasurement function");
         
         return await _measurementRepository.DeleteMeasurement(id);
     }
@@ -68,7 +68,7 @@ public class MeasurementService : IMeasurementService
     {
         using var activity = _tracer.StartActiveSpan("UpdateMeasurement");
         
-        Logging.Log.Information("Called UpdateMeasurement function");
+        LoggingService.Log.Information("Called UpdateMeasurement function");
         
         return await _measurementRepository.UpdateMeasurement(id, _mapper.Map<Measurement>(measurement));
     }
@@ -77,7 +77,7 @@ public class MeasurementService : IMeasurementService
     {
         using var activity = _tracer.StartActiveSpan("RebuildDatabase");
         
-        Logging.Log.Information("Called RebuildDatabase function");
+        LoggingService.Log.Information("Called RebuildDatabase function");
         
         await _measurementRepository.RebuildDatabase();
     }

@@ -65,8 +65,6 @@ services:
     depends_on:
       zipkin-storage:
         condition: service_healthy
-    networks:
-      - local_network
 
   zipkin-storage:
     image: openzipkin/zipkin-mysql
@@ -74,9 +72,6 @@ services:
       - "3306:3306"
     volumes:
       - zipkin_data:/mysql/data
-    networks:
-      - local_network
-  
   
   #APIS
   apigateway:

@@ -18,15 +18,9 @@ public static class DependencyInjectionConfig
         //DI 
         services.AddScoped<IMeasurementRepository, MeasurementRepository>();
         services.AddScoped<IMeasurementService, Core.Services.MeasurementService>();
-
+        
         //Automapper
         services.AddSingleton(AutoMapperConfig.ConfigureAutomapper());
-
-        //Tracing
-        var serviceName = "MyTracer";
-        
-        services.AddOpenTelemetry().Setup();
-        services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
         
         //Caching
         services.AddSingleton(RedisClientFactory.CreateRedisClient());

@@ -26,12 +26,6 @@ public static class DependencyInjectionConfig
         //Caching
         services.AddSingleton(RedisClientFactory.CreateRedisClient());
         
-        //Tracing
-        var serviceName = "MyTracer";
-        
-        services.AddOpenTelemetry().Setup();
-        services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
-        
         //FeatureHub
         services.AddSingleton(FeatureHubFactory.CreateFeatureHub());
     }

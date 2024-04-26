@@ -29,7 +29,7 @@ public class PatientService : IPatientService
     {
         using var activity = _tracer.StartActiveSpan("GetAllPatients");
 
-        Logging.Log.Information("Called GetAllPatients function");
+        LoggingService.Log.Information("Called GetAllPatients function");
 
         return await _patientRepository.GetAllPatients();
     }
@@ -38,7 +38,7 @@ public class PatientService : IPatientService
     {
         using var activity = _tracer.StartActiveSpan("SearchPatient");
 
-        Logging.Log.Information("Called SearchPatient function");
+        LoggingService.Log.Information("Called SearchPatient function");
 
         return await _patientRepository.SearchPatients(dto.SearchTerm, dto.PageNumber, dto.PageSize);
     }
@@ -47,7 +47,7 @@ public class PatientService : IPatientService
     {
         using var activity = _tracer.StartActiveSpan("GetAllPatientsWithPagination");
 
-        Logging.Log.Information("Called GetAllPatientsWithPagination function");
+        LoggingService.Log.Information("Called GetAllPatientsWithPagination function");
 
         return await _patientRepository.GetAllPatientsWithPagination(dto.PageNumber, dto.PageSize);
     }
@@ -57,7 +57,7 @@ public class PatientService : IPatientService
     {
         using var activity = _tracer.StartActiveSpan("GetPatientBySsn");
 
-        Logging.Log.Information("Called GetPatientBySsn function");
+        LoggingService.Log.Information("Called GetPatientBySsn function");
 
         return await _patientRepository.GetPatientBySsn(ssn);
     }
@@ -66,7 +66,7 @@ public class PatientService : IPatientService
     {
         using var activity = _tracer.StartActiveSpan("DeletePatient");
 
-        Logging.Log.Information("Called DeletePatient function");
+        LoggingService.Log.Information("Called DeletePatient function");
 
         return await _patientRepository.DeletePatient(ssn);
     }
@@ -75,7 +75,7 @@ public class PatientService : IPatientService
     {
         using var activity = _tracer.StartActiveSpan("CreatePatient");
 
-        Logging.Log.Information("Called CreatePatient function");
+        LoggingService.Log.Information("Called CreatePatient function");
 
         return await _patientRepository.CreatePatient(_mapper.Map<Patient>(patient));
     }
@@ -84,7 +84,7 @@ public class PatientService : IPatientService
     {
         using var activity = _tracer.StartActiveSpan("RebuildDatabase");
 
-        Logging.Log.Information("Called RebuildDatabase function");
+        LoggingService.Log.Information("Called RebuildDatabase function");
 
         await _patientRepository.RebuildDatabase();
     }

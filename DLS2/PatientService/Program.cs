@@ -4,6 +4,12 @@ using PatientService.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var serviceName = "MyTracer";
+var serviceVersion = "1.0.0";
+
+builder.Services.AddOpenTelemetry();
+builder.Services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
