@@ -1,5 +1,7 @@
 ﻿using Cache;
+using EasyNetQ;
 using FeatureHub;
+using Messaging;
 using Monitoring;
 using OpenTelemetry.Trace;
 using PatientService.Core.Helper;
@@ -13,6 +15,9 @@ public static class DependencyInjectionConfig
 {
     public static void ConfigureDependencyInjection(this IServiceCollection services)
     {
+        //Messaging
+        services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest")));
+        
         //Monitoring
         var serviceName = "MyTracer";
         services.AddOpenTelemetry().Setup();
