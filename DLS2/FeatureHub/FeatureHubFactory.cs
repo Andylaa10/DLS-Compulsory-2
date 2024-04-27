@@ -4,7 +4,7 @@ public class FeatureHubFactory
 {
     public static FeatureHubClient CreateFeatureHub()
     {
-        const string apiKey = "6bba3e9c-faa1-4e85-b6a2-8bfb15ee25f1/B1vtNAIwHBFSpVE2W3yPAYfNiY3zmaEOyNhETPDk";
+        const string apiKey = "ae1cb182-5012-4082-a86d-a214bdd0956c/c8se2E7n6MFGLoakrYMfwbQ7yRECbyRRlCFoCdbd";
         return new FeatureHubClient(apiKey);
     }
 }

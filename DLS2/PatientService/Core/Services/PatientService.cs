@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Cache;
+using Messaging;
+using Messaging.SharedMessages;
 using Monitoring;
 using OpenTelemetry.Trace;
 using PatientService.Core.Entities;
@@ -14,12 +16,15 @@ public class PatientService : IPatientService
     private readonly IPatientRepository _patientRepository;
     private readonly IMapper _mapper;
     private readonly RedisClient _redisClient;
+    private readonly MessageClient _messageClient;
 
-    public PatientService(IPatientRepository patientRepository, IMapper mapper, RedisClient redisClient)
+
+    public PatientService(IPatientRepository patientRepository, IMapper mapper, RedisClient redisClient, MessageClient messageClient)
     {
         _patientRepository = patientRepository;
         _mapper = mapper;
         _redisClient = redisClient;
+        _messageClient = messageClient;
         _redisClient.Connect();
     }
 
@@ -41,17 +46,28 @@ public class PatientService : IPatientService
 
     public async Task<Patient> GetPatientBySsn(string ssn)
     {
+        //Try to get from the cache first
+        var patientJson = _redisClient.GetValue(ssn);
+        if (!string.IsNullOrEmpty(patientJson))
+            return await Task.FromResult(_redisClient.DeserializeObject<Patient>(patientJson)!);
+        
         return await _patientRepository.GetPatientBySsn(ssn);
     }
 
     public async Task<Patient> DeletePatient(string ssn)
     {
-        return await _patientRepository.DeletePatient(ssn);
+        await _messageClient.Send(new DeletePatientMessage("Delete Patient", ssn), "DeletePatient");
+        var patient = await _patientRepository.DeletePatient(ssn);
+        return patient;
     }
 
-    public async Task<Patient> CreatePatient(CreatePatientDto patient)
+    public async Task<Patient> CreatePatient(CreatePatientDto dto)
     {
-        return await _patientRepository.CreatePatient(_mapper.Map<Patient>(patient));
+        var patient = await _patientRepository.CreatePatient(_mapper.Map<Patient>(dto));
+        var patientJson = _redisClient.SerializeObject(patient);
+        
+        _redisClient.StoreValue(patient.SSN, patientJson);
+        return patient;
     }
 
     public async Task RebuildDatabase()

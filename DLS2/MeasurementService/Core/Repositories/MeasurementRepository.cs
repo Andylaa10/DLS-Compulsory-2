@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using MeasurementService.Core.Entities;
+﻿using MeasurementService.Core.Entities;
 using MeasurementService.Core.Entities.Helper;
 using MeasurementService.Core.Helper;
 using MeasurementService.Core.Repositories.Interfaces;
@@ -43,6 +42,13 @@ public class MeasurementRepository : IMeasurementRepository
         return await Task.Run(() => result);
     }
 
+    public async Task<Measurement> GetMeasurementById(int id)
+    {
+        var measurement = await _context.Measurements.FirstOrDefaultAsync(m => m.Id == id) ??
+                          throw new NullReferenceException();
+        return measurement;
+    }
+
     public async Task<Measurement> CreateMeasurement(Measurement measurement)
     {
         await _context.Measurements.AddAsync(measurement);
@@ -74,6 +80,17 @@ public class MeasurementRepository : IMeasurementRepository
         await _context.SaveChangesAsync();
 
         return measurementToUpdate;
+    }
+
+    public async Task DeleteMeasurementsOnPatient(string ssn)
+    {
+        var measurements = await _context.Measurements.Where(m => m.SSN == ssn).ToListAsync();
+        if (measurements.Count > 0)
+        {
+            Console.WriteLine(measurements.Count);
+            _context.Measurements.RemoveRange(measurements);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task RebuildDatabase()

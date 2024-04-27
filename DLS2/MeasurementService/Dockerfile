@@ -9,6 +9,7 @@ WORKDIR /src
 COPY ["DLS2/MeasurementService/MeasurementService.csproj", "DLS2/MeasurementService/"]
 COPY ["DLS2/Monitoring/Monitoring.csproj", "DLS2/Monitoring/"]
 COPY ["DLS2/Cache/Cache.csproj", "/DLS2/Cache/Cache.csproj"]
+COPY ["DLS2/Messaging/Messaging.csproj", "DLS2/Messaging/"]
 RUN dotnet restore "./DLS2/MeasurementService/MeasurementService.csproj"
 COPY . .
 WORKDIR "/src/DLS2/MeasurementService"

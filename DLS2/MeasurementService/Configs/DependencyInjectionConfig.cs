@@ -1,5 +1,6 @@
 ﻿using Cache;
 using MeasurementService.Core.Helper;
+using MeasurementService.Core.Helper.MessageHandlers;
 using MeasurementService.Core.Repositories;
 using MeasurementService.Core.Repositories.Interfaces;
 using MeasurementService.Core.Services.Interfaces;
@@ -12,6 +13,9 @@ public static class DependencyInjectionConfig
 {
     public static void ConfigureDependencyInjection(this IServiceCollection services)
     {
+        //Messages handlers
+        services.AddHostedService<DeletePatientHandler>();
+        
         //Monitoring
         var serviceName = "MyTracer";
         services.AddOpenTelemetry().Setup();
