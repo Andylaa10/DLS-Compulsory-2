@@ -44,7 +44,15 @@ public class MeasurementService : IMeasurementService
         
         return await _measurementRepository.GetAllMeasurementsBySsnPaginated(ssn, pageNumber, pageSize);
     }
-    
+
+    public async Task<Measurement> GetMeasurementById(int id)
+    {
+        using var activity = _tracer.StartActiveSpan("GetMeasurementById");
+        
+        Logging.Log.Information("Called GetMeasurementById function");
+        
+        return await _measurementRepository.GetMeasurementById(id);    }
+
 
     public async Task<Measurement> CreateMeasurement(CreateMeasurementDto measurement)
     {

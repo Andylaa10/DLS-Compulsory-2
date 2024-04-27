@@ -42,6 +42,11 @@ public class MeasurementRepository : IMeasurementRepository
         return await Task.Run(() => result);
     }
 
+    public async Task<Measurement> GetMeasurementById(int id)
+    {
+    return await _context.Measurements.Where(m => m.Id == id).FirstOrDefaultAsync();
+    }
+
     public async Task<Measurement> CreateMeasurement(Measurement measurement)
     {
         await _context.Measurements.AddAsync(measurement);
