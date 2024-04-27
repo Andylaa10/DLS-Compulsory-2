@@ -1,4 +1,5 @@
 version: '3.9'
+
 services:
 #Cache
   redis:
@@ -57,21 +58,10 @@ services:
     image: openzipkin/zipkin
     ports:
       - "9411:9411"
-    environment:
-      - STORAGE_TYPE=mysql
-      - MYSQL_HOST=zipkin-storage
-      - MYSQL_USER=zipkin
-      - MYSQL_PASS=zipkin
     depends_on:
-      zipkin-storage:
-        condition: service_healthy
-
-  zipkin-storage:
-    image: openzipkin/zipkin-mysql
-    ports:
-      - "3306:3306"
-    volumes:
-      - zipkin_data:/mysql/data
+      - patient-service
+      - measurement-service
+      - seq
   
   #APIS
   apigateway:
@@ -96,10 +86,7 @@ services:
         condition: service_started
       apigateway:
         condition: service_started
-      seq:
-        condition: service_started
-      zipkin:
-        condition: service_started
+
 
   patient-service:
     image: patientservice
@@ -117,11 +104,7 @@ services:
         condition: service_started
       featurehub:
         condition: service_started
-      seq:
-        condition: service_started
-      zipkin:
-        condition: service_started
-
+      
 #Frontend
   doctor-ui:
     ports:
@@ -152,7 +135,6 @@ services:
 
 volumes:
   seq_data:
-  zipkin_data:
   mssql_data_measurement_db:
   mssql_data_patient_db:
   featurehub-h2-data:

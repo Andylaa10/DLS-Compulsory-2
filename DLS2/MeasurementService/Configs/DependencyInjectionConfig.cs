@@ -12,6 +12,11 @@ public static class DependencyInjectionConfig
 {
     public static void ConfigureDependencyInjection(this IServiceCollection services)
     {
+        //Monitoring
+        var serviceName = "MyTracer";
+        services.AddOpenTelemetry().Setup();
+        services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
+        
         //Database 
         services.AddDbContext<MeasurementDbContext>();
 
