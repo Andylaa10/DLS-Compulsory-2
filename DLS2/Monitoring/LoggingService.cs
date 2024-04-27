@@ -9,6 +9,7 @@ public static class LoggingService
     
     static LoggingService()
     {
+        // Serilog
         Serilog.Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Verbose()
             .WriteTo.Seq("http://seq:5341")

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using OpenTelemetry;
+﻿using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -8,17 +6,20 @@ namespace Monitoring;
 
 public static class TracingService
 {
-    public static readonly string ServiceName = Assembly.GetCallingAssembly().GetName().Name ?? "UnknownService";
-    public static TracerProvider TracerProvider;
-    public static ActivitySource ActivitySource = new ActivitySource(ServiceName);
-    
-    static TracingService()
+    public static OpenTelemetryBuilder Setup(this OpenTelemetryBuilder builder)
     {
-        TracerProvider = Sdk.CreateTracerProviderBuilder()
-            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(ServiceName))
-            .AddSource(ServiceName)
-            .AddZipkinExporter(c=>c.Endpoint = new Uri("http://zipkin:9411/api/v2/spans"))
-            .AddConsoleExporter()
-            .Build();
+        var serviceName = "MyTracer";
+        var serviceVersion = "1.0.0";
+        
+        return builder.WithTracing(tcb =>
+        {
+            tcb
+                .AddSource(serviceName)
+                .AddZipkinExporter(c => c.Endpoint = new Uri("http://zipkin:9411/api/v2/spans"))
+                .SetResourceBuilder(
+                    ResourceBuilder.CreateDefault()
+                        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+                .AddAspNetCoreInstrumentation();
+        });
     }
 }
