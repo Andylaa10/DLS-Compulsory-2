@@ -28,6 +28,8 @@ import {MatButtonModule, MatMiniFabButton} from "@angular/material/button";
 import {MatTooltip, MatTooltipModule} from "@angular/material/tooltip";
 import {MatDialog} from "@angular/material/dialog";
 import {CreatePatientDialogComponent} from "../create-patient-dialog/create-patient-dialog.component";
+import {CountryStore} from "../../../core/state/country.state";
+import {SnackBarService} from "../../../core/services/helper/snack-bar.service";
 
 @Component({
   selector: 'app-patient-table',
@@ -55,6 +57,10 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
   private _destroyed$: Subject<void> = new Subject<void>();
   private _patientService: PatientService = inject(PatientService);
   private _dialog: MatDialog = inject(MatDialog);
+  private _snackbarService: SnackBarService = inject(SnackBarService);
+
+
+  countryStore: CountryStore = inject(CountryStore);
 
   displayedColumns: string[] = ['ssn', 'email', 'name', 'action'];
   dataSource!: MatTableDataSource<Patient>;
@@ -160,14 +166,15 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
     this._patientService.deletePatient(ssn)
       .pipe(
         takeUntil(this._destroyed$),
-        catchError(() => {
-          this.loading.set(false);
-          return of();
+        catchError((err) => {
+          this._snackbarService.openSnackBar(err['error'])
+          return of(err);
         })
       )
       .subscribe(result => {
         this.getPatients(this.pageNumber, this.pageSize);
       });
+    this.loading.set(false);
   }
 
 }

@@ -11,9 +11,11 @@ import {MatRipple} from "@angular/material/core";
 import {MeasurementService} from "../../../core/services/measurement.service";
 import {Measurement} from "../../../core/models/measurement.model";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {DatePipe} from "@angular/common";
+import {DatePipe, JsonPipe} from "@angular/common";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {UpdateMeasurementDto} from "../../../core/dtos/updateMeasurement.dto";
+import {MatIcon} from "@angular/material/icon";
+import {MomentDatePipe} from "../../../core/pipes/moment-date.pipe";
 
 @Component({
   selector: 'app-patient-details',
@@ -32,6 +34,9 @@ import {UpdateMeasurementDto} from "../../../core/dtos/updateMeasurement.dto";
     MatProgressSpinner,
     DatePipe,
     MatCheckbox,
+    MatIcon,
+    MomentDatePipe,
+    JsonPipe,
   ],
   templateUrl: './patient-details.component.html',
   styleUrl: './patient-details.component.scss'
@@ -67,8 +72,9 @@ export class PatientDetailsComponent implements OnChanges{
       viewedByDoctor: true,
     };
 
-    this._measurementService.updateMeasurement(dto.id, dto).subscribe(()=>{
-      console.log('sadasds');
+    this._measurementService.updateMeasurement(dto.id, dto).subscribe(updatedMeasurement=>{
+      const index = this.measurements().findIndex(m => m.id == dto.id);
+      this.measurements()[index] = updatedMeasurement;
     });
   }
 }

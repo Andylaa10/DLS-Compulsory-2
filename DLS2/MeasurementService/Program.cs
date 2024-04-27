@@ -18,20 +18,18 @@ builder.Services.ConfigureDependencyInjection();
 
 var app = builder.Build();
 
+app.UseCors(static x => x
+    .AllowAnyHeader()
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseCors(options =>
-{
-    options
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowAnyOrigin();
-});
 
 app.UseAuthorization();
 

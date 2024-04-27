@@ -4,13 +4,13 @@ import {Observable} from "rxjs";
 import {Patient} from "../models/patient.model";
 import {PaginatedResult} from "../models/helper/paginatedResult.model";
 import {CreatePatientDto} from "../dtos/createPatient.dto";
-import {H} from "@angular/cdk/keycodes";
+import {environment} from "../../../assets/enviorment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatientService {
-  private _apiEndpoint: string = "http://localhost:5206/api/Patient"
+  private _apiEndpoint: string = environment.API_PROD_URL_PATIENT;
 
   private _http: HttpClient = inject(HttpClient);
 
@@ -31,15 +31,11 @@ export class PatientService {
   }
 
   createPatient(dto: CreatePatientDto): Observable<Patient> {
-    return this._http.post<Patient>(`${this._apiEndpoint}/CreatePatient`, dto, {
-      headers: {
-        country: 'denmark'
-      }
-    });
+    return this._http.post<Patient>(`${this._apiEndpoint}/CreatePatient`, dto);
   }
 
   deletePatient(ssn: number): Observable<Patient> {
-    return this._http.delete<Patient>(`${this._apiEndpoint}/DeletePatient/` + ssn)
+    return this._http.delete<Patient>(`${this._apiEndpoint}/DeletePatient/` + ssn);
   }
 
 }
