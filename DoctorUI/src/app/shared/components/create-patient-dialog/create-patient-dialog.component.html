@@ -5,7 +5,7 @@
   <div class="form-field-placement" [formGroup]="createPatientForm">
     <mat-form-field appearance="fill" color="accent">
       <mat-label>SSN</mat-label>
-      <input matInput placeholder="1234567899" maxlength="10" formControlName="ssnControl">
+      <input matInput placeholder="1234567899" maxlength="10" formControlName="ssnControl" #ssn>
     </mat-form-field>
     <mat-form-field appearance="fill" color="accent">
       <mat-label>Email</mat-label>

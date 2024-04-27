@@ -1,7 +1,8 @@
 <div class="content mat-elevation-z8">
   <div>
     <div class="add-btn-placement">
-      <button mat-mini-fab matTooltip="Create Patient" color="primary" matTooltipPosition="left" (click)="openCreatePatientDialog()">
+      <button mat-mini-fab matTooltip="Create Patient" color="primary" matTooltipPosition="left"
+              (click)="openCreatePatientDialog()" [disabled]="countryStore.$country().name === ''">
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -20,8 +21,10 @@
         <ng-container [matColumnDef]="header">
           <th mat-header-cell *matHeaderCellDef>{{ header }}</th>
           @if (header === 'action') {
-      <td class="drag-row" mat-cell *matCellDef="let patient"><mat-icon class="delete-button" (click)="deletePatient(patient['ssn'])">delete</mat-icon></td>
-      }
+            <td class="drag-row" mat-cell *matCellDef="let patient">
+              <button mat-icon-button class="delete-button" (click)="deletePatient(patient['ssn'])" [disabled]="countryStore.$country().name === ''"><mat-icon >delete</mat-icon></button>
+            </td>
+          }
           <td class="drag-row" mat-cell *matCellDef="let patient">{{ patient[header] }}</td>
 
         </ng-container>
@@ -35,7 +38,7 @@
 
       <!-- Row shown when there is no matching data. -->
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">No data matching the search: "{{input.value}}"</td>
+        <td class="mat-cell" colspan="4">No data matching the search: "{{ input.value }}"</td>
       </tr>
     </table>
     @if (loading()) {
