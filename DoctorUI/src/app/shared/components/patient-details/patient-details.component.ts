@@ -52,13 +52,16 @@ export class PatientDetailsComponent implements OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     if (changes){
       if (this.patient){
-        this.getMeasurementsOnPatient(this.patient.ssn!);
+        if(this.patient.ssn !== ''){
+          this.getMeasurementsOnPatient(this.patient.ssn!);
+        }
       }
     }
   }
 
 
   getMeasurementsOnPatient(ssn: string){
+    this.measurements.set([]);
     this.loading.set(true);
     this._measurementService.getMeasurementOnPatient(ssn).subscribe((measurements: Measurement[]) => {
       this.measurements.set(measurements);

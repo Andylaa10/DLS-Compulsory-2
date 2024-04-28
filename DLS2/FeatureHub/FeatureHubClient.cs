@@ -22,12 +22,8 @@ public class FeatureHubClient
         StrategyAttributeCountryName countryName;
     
         if (!Enum.TryParse(country, true, out countryName)) throw new ArgumentException("Could not find country");
-    
-        Console.WriteLine(countryName);
         
         var featureToggle = await _config.NewContext().Country(countryName).Build();
-    
-        Console.WriteLine(featureToggle["DDO"].IsEnabled);
         
         //Change to real feature 
         return featureToggle["DDO"].IsEnabled;

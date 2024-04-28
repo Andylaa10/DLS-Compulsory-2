@@ -15,7 +15,7 @@ public class PatientController : ControllerBase
     private readonly IPatientService _patientService;
     private readonly FeatureHubClient _featureHubClient;
     private readonly Tracer _tracer;
-
+    private readonly HttpClient _httpClient = new (); 
 
     public PatientController(IPatientService patientService, FeatureHubClient featureHubClient, Tracer tracer)
     {
@@ -143,8 +143,10 @@ public class PatientController : ControllerBase
             var feature = await _featureHubClient.IsCountryAllowed(country);
 
             if (!feature) return StatusCode(403, $"Method not allowed in {country}");
-
-
+            
+            //Somehow messaging doesnt work, so this is a temperately solution
+            await _httpClient.DeleteAsync($"http://apigateway/api/Measurement/DeleteMeasurements/{ssn}");
+            
             return Ok(await _patientService.DeletePatient(ssn));
         }
         catch (Exception e)

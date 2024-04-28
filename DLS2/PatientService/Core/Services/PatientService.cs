@@ -56,6 +56,7 @@ public class PatientService : IPatientService
 
     public async Task<Patient> DeletePatient(string ssn)
     {
+        _redisClient.RemoveValue(ssn);
         await _messageClient.Send(new DeletePatientMessage("Delete Patient", ssn), "DeletePatient");
         var patient = await _patientRepository.DeletePatient(ssn);
         return patient;

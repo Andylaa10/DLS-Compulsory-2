@@ -110,8 +110,7 @@ public class MeasurementController : ControllerBase
             return BadRequest(e.ToString());
         }
     }
-
-
+    
     [HttpPut]
     [Route("UpdateMeasurement/{id}")]
     public async Task<IActionResult> UpdateMeasurement([FromRoute] int id, [FromBody] UpdateMeasurementDto dto)
@@ -127,6 +126,21 @@ public class MeasurementController : ControllerBase
         catch (Exception e)
         {
             return BadRequest(e.ToString());
+        }
+    }
+
+    [HttpDelete]
+    [Route("DeleteMeasurements/{ssn}")]
+    public async Task<IActionResult> DeleteMeasurementsOnPatient([FromRoute] string ssn)
+    {
+        try
+        {
+            await _measurementService.DeleteMeasurementsOnPatient(ssn);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
     }
 
