@@ -68,12 +68,15 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
   totalCount: number = 0;
   pageSize: number = 5;
 
-  selectedPatient = signal<Patient>({
+  private _initialPatient: Patient = {
     email: '',
     id: 0,
     name: '',
     ssn: ''
-  });
+  };
+
+  selectedPatient = signal<Patient>(this._initialPatient);
+
   loading = signal(false);
 
   pageChangeEvent($event: PageEvent): void {
@@ -160,7 +163,7 @@ export class PatientTableComponent implements AfterViewInit, OnDestroy {
   deletePatient(ssn: number) {
     const confirmation = window.confirm("Are you sure you want to delete this patient?");
     if (!confirmation) {
-      return; // Do nothing if user cancels the deletion
+      return;
     }
 
     this._patientService.deletePatient(ssn)

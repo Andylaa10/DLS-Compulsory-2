@@ -33,5 +33,11 @@ public static class DependencyInjectionConfig
         
         //FeatureHub
         services.AddSingleton(FeatureHubFactory.CreateFeatureHub());
+        
+        //Monitoring
+        var serviceName = "PatientService";
+        var serviceVersion = "1.0.0"; 
+        services.AddOpenTelemetry().Setup(serviceName, serviceVersion);
+        services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
     }
 }

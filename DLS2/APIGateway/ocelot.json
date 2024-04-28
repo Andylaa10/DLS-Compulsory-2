@@ -76,6 +76,20 @@
       ]
     },
     {
+      "UpstreamPathTemplate": "/api/Measurement/DeleteMeasurements/{ssn}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/Measurement/DeleteMeasurements/{ssn}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Port": 80,
+          "Host": "measurement-service"
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/api/Measurement/RebuildDb",
       "UpstreamHttpMethod": [
         "POST"

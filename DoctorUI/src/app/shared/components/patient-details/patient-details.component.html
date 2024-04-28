@@ -2,57 +2,59 @@
   @if (!patient) {
     <p>Drag & drop patient to see medical informations</p>
   } @else {
-    <mat-expansion-panel matRipple>
-      <mat-expansion-panel-header>
-        <div class="header-placement">
-          <div>
-            <div class="id">
-              <span class="field">ID: </span> {{ patient.id }}
+    @if(patient.ssn !== ''){
+      <mat-expansion-panel matRipple>
+        <mat-expansion-panel-header>
+          <div class="header-placement">
+            <div>
+              <div class="id">
+                <span class="field">ID: </span> {{ patient.id }}
+              </div>
+            </div>
+            <div>
+              <span class="field">SSN:</span> {{ patient.ssn }}
+              <br>
+              <span class="field">Email:</span> {{ patient.email }}
+              <br>
+              <span class="field">Name:</span> {{ patient.name }}
             </div>
           </div>
-          <div>
-            <span class="field">SSN:</span> {{ patient.ssn }}
-            <br>
-            <span class="field">Email:</span> {{ patient.email }}
-            <br>
-            <span class="field">Name:</span> {{ patient.name }}
+        </mat-expansion-panel-header>
+        @if (loading()) {
+          <div class="spinner-placement">
+            <mat-progress-spinner class="example-margin" color="warn" mode="indeterminate">
+            </mat-progress-spinner>
           </div>
-        </div>
-      </mat-expansion-panel-header>
-      @if (loading()) {
-        <div class="spinner-placement">
-          <mat-progress-spinner class="example-margin" color="warn" mode="indeterminate">
-          </mat-progress-spinner>
-        </div>
-      }
-      <hr>
-
-      @if (measurements().length < 1) {
-        <div>No measurement on this patient</div>
-      } @else {
-        @for (measurement of measurements(); track $index) {
-          <mat-card class="example-card">
-            <mat-card-header>
-              <mat-card-title-group>
-                <mat-card-title>Blood pressure: {{ measurement.systolic }}/{{ measurement.diastolic }} mmHg
-                </mat-card-title>
-                <mat-card-subtitle>SSN: {{ measurement.ssn }}</mat-card-subtitle>
-              </mat-card-title-group>
-              @if (measurement.viewedByDoctor) {
-                <mat-icon id="checked">check_circle</mat-icon>
-              } @else {
-                <mat-checkbox class="example-margin" (click)="viewedByDoctor(measurement)"
-                              [checked]="measurement.viewedByDoctor"></mat-checkbox>
-              }
-
-            </mat-card-header>
-            <mat-card-content>
-              <br>
-              <span>Date of measurement: {{ measurement.date | momentDate }} </span>
-            </mat-card-content>
-          </mat-card>
         }
-      }
-    </mat-expansion-panel>
+        <hr>
+
+        @if (measurements().length < 1) {
+          <div>No measurement on this patient</div>
+        } @else {
+          @for (measurement of measurements(); track $index) {
+            <mat-card class="example-card">
+              <mat-card-header>
+                <mat-card-title-group>
+                  <mat-card-title>Blood pressure: {{ measurement.systolic }}/{{ measurement.diastolic }} mmHg
+                  </mat-card-title>
+                  <mat-card-subtitle>SSN: {{ measurement.ssn }}</mat-card-subtitle>
+                </mat-card-title-group>
+                @if (measurement.viewedByDoctor) {
+                  <mat-icon id="checked">check_circle</mat-icon>
+                } @else {
+                  <mat-checkbox class="example-margin" (click)="viewedByDoctor(measurement)"
+                                [checked]="measurement.viewedByDoctor"></mat-checkbox>
+                }
+
+              </mat-card-header>
+              <mat-card-content>
+                <br>
+                <span>Date of measurement: {{ measurement.date | momentDate }} </span>
+              </mat-card-content>
+            </mat-card>
+          }
+        }
+      </mat-expansion-panel>
+    }
   }
 </div>

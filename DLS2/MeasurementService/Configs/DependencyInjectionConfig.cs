@@ -13,9 +13,6 @@ public static class DependencyInjectionConfig
 {
     public static void ConfigureDependencyInjection(this IServiceCollection services)
     {
-        //Messages handlers
-        services.AddHostedService<DeletePatientHandler>();
-        
         //Database 
         services.AddDbContext<MeasurementDbContext>();
 
@@ -28,5 +25,14 @@ public static class DependencyInjectionConfig
         
         //Caching
         services.AddSingleton(RedisClientFactory.CreateRedisClient());
+        
+        //Monitoring
+        var serviceName = "PatientService";
+        var serviceVersion = "1.0.0";
+        services.AddOpenTelemetry().Setup(serviceName, serviceVersion);
+        services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
+        
+        //Messages handlers
+        services.AddHostedService<DeletePatientHandler>();
     }
 }
