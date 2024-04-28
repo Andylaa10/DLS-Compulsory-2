@@ -100,7 +100,7 @@ export const Home: React.FunctionComponent = () => {
   return (
       <>
         <CssBaseline/>
-        <Box className="container" sx={{backgroundColor: "#717373"}}>
+        <Box className="container" sx={{backgroundColor: "#cbc7c7"}}>
           <Card sx={{width: "80vw", height: "90vh", backgroundColor: "#4f5050"}}>
             <Card sx={{backgroundColor: "#626569", width: "100%", padding: 1}}>
               <Box display="flex" justifyContent="space-between">
