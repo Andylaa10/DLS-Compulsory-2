@@ -8,14 +8,14 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
+  ListItemText, Menu, MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import LoginIcon from '@mui/icons-material/Login';import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import PatientLogo from "../assets/Logo.png";
 import PressureChart from "../assets/BloodPressureChart.png";
 import {Measurement} from "../../core/models/Measurement.ts";
@@ -35,6 +35,7 @@ export const Home: React.FunctionComponent = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [patientName, setPatientName] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
 
 
   const {ssn} = useParams<{ ssn: string | undefined }>();
@@ -58,7 +59,7 @@ export const Home: React.FunctionComponent = () => {
   }
 
   const fetchPatientInfo = async () => {
-    if(ssn === undefined) return;
+    if (ssn === undefined) return;
 
     try {
       const patient = await patientService.getPatientBySsn(ssn);
@@ -92,6 +93,19 @@ export const Home: React.FunctionComponent = () => {
     }
   };
 
+  function handleMenu(event: any) {
+    if (anchorEl !== event.currentTarget) {
+      setAnchorEl(event.currentTarget);
+    }
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+  function logout() {
+    location.href = "/login";
+  }
+
   useEffect(() => {
     fetchPatientInfo();
     fetchMeasurements();
@@ -109,10 +123,20 @@ export const Home: React.FunctionComponent = () => {
                 </Typography>
                 <Typography variant="h6" sx={{color: "#cecaca"}}>
                   {patientName}
-                  <IconButton onClick={() => console.log("drop down with info + log in")}>
+                  <IconButton aria-owns={anchorEl ? "simple-menu" : undefined}
+                              aria-haspopup="true" onMouseOver={handleMenu} onClick={handleMenu}>
                     <AccountCircleIcon sx={{width: 40, height: 40, color: "rgba(34,34,241,0.66)"}}/>
                   </IconButton>
                 </Typography>
+                <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    MenuListProps={{onMouseLeave: handleClose}}
+                >
+                  <MenuItem onClick={logout}>Logout <LoginIcon sx={{marginLeft: 2}}/></MenuItem>
+                </Menu>
               </Box>
             </Card>
             <Box display={"flex"} height={"100%"}>

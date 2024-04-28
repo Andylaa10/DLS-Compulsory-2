@@ -11,7 +11,6 @@ const RoutesComponent: React.FunctionComponent = () => {
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Login />} />
       <Route path="login" element={<Login />} />
-      <Route path="home" element={<Home />} />
       <Route path="home/:ssn" element={<Home />} />
     </Routes>
   );

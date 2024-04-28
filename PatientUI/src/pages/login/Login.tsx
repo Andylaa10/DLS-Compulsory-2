@@ -3,19 +3,30 @@ import './Login.css'
 import React, {useState} from 'react';
 import PatientLogo from '../assets/patient.png';
 import {PatientService} from "../../core/services/PatientService.ts";
+import {CountrySelect} from "../../components/CountryPicker.tsx";
+import { CountryType } from "../../components/CountryPicker.tsx";
+
 
 export const Login: React.FunctionComponent = () => {
   const [ssn, setSsn] = useState('');
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState('');
-
+  const [selectedCountry, setSelectedCountry] = useState<CountryType | null>(null);
   const patientService = new PatientService();
 
-
+  const handleCountryChange = (country: any) => {
+    setSelectedCountry(country);
+  };
   const handleLogin = async () => {
+    if (selectedCountry && selectedCountry.code !== "DK") {
+      setShowError(true);
+      setError("This country is not allowed");
+      return;
+    }
+
     const patient = await patientService.getPatientBySsn(ssn);
 
-    if (patient.ssn === ssn) {
+    if (patient && patient.ssn === ssn && selectedCountry && selectedCountry.code === "DK") {
       window.location.href = `/home/${ssn}`;
     } else {
       setShowError(true);
@@ -39,6 +50,8 @@ export const Login: React.FunctionComponent = () => {
             <Typography variant="h4" gutterBottom>
               <img style={{width: 175}} src={PatientLogo} alt={"patients"}/>
             </Typography>
+            <CountrySelect onCountryChange={handleCountryChange}/>
+
             <TextField
                 variant="outlined"
                 margin="normal"
