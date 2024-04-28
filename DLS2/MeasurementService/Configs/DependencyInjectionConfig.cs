@@ -16,11 +16,6 @@ public static class DependencyInjectionConfig
         //Messages handlers
         services.AddHostedService<DeletePatientHandler>();
         
-        //Monitoring
-        var serviceName = "MyTracer";
-        services.AddOpenTelemetry().Setup();
-        services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
-        
         //Database 
         services.AddDbContext<MeasurementDbContext>();
 

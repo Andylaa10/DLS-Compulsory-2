@@ -6,20 +6,23 @@ namespace Monitoring;
 
 public static class TracingService
 {
-    public static OpenTelemetryBuilder Setup(this OpenTelemetryBuilder builder)
+    public static OpenTelemetryBuilder Setup(this OpenTelemetryBuilder builder, string serviceName, string serviceVersion)
     {
-        var serviceName = "MyTracer";
-        var serviceVersion = "1.0.0";
-        
         return builder.WithTracing(tcb =>
         {
             tcb
                 .AddSource(serviceName)
-                .AddZipkinExporter(c => c.Endpoint = new Uri("http://zipkin:9411/api/v2/spans"))
+                .AddZipkinExporter(c =>
+                {
+                    c.Endpoint = new Uri("http://zipkin:9411/api/v2/spans");
+                })
+                .AddConsoleExporter()
                 .SetResourceBuilder(
                     ResourceBuilder.CreateDefault()
                         .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
-                .AddAspNetCoreInstrumentation();
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddConsoleExporter();
         });
     }
 }

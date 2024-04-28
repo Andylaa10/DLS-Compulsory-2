@@ -18,11 +18,6 @@ public static class DependencyInjectionConfig
         //Messaging
         services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest")));
         
-        //Monitoring
-        var serviceName = "MyTracer";
-        services.AddOpenTelemetry().Setup();
-        services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
-        
         //Database 
         services.AddDbContext<PatientDbContext>();
         
