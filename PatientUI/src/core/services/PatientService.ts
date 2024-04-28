@@ -7,7 +7,7 @@ export class PatientService{
 
   async getPatientBySsn(ssn: string) {
     try {
-      const response = await this.api.get(`/patients/${ssn}`);
+      const response = await this.api.get(`/patient/${ssn}`);
       return response.data;
     } catch (error) {
       console.error("Error in getPatientBySsn: ", error);

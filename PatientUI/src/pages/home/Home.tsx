@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {
   Box,
+  Button,
   Card,
   CssBaseline,
   IconButton,
@@ -8,22 +9,39 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  TextField,
   Typography,
 } from "@mui/material";
+
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import PatientLogo from "../assets/Logo.png";
+import PressureChart from "../assets/BloodPressureChart.png";
 import {Measurement} from "../../core/models/Measurement.ts";
 import {MeasurementService} from "../../core/services/MeasurementService.ts";
 import {useParams} from "react-router-dom";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
+import {CreateMeasurementDTO} from "../../core/dtos/CreateMeasurementDTO.ts";
+import {PatientService} from "../../core/services/PatientService.ts";
+
 
 export const Home: React.FunctionComponent = () => {
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
+  const [selectedMeasurement, setSelectedMeasurement] = useState<Measurement | null>(null);
+  const [systolic, setSystolic] = useState('');
+  const [diastolic, setDiastolic] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [patientName, setPatientName] = useState('');
+
 
   const {ssn} = useParams<{ ssn: string | undefined }>();
 
+
   const measurementService = new MeasurementService();
+  const patientService = new PatientService();
 
   const fetchMeasurements = async () => {
     try {
@@ -32,13 +50,50 @@ export const Home: React.FunctionComponent = () => {
       // Sort the inputs based on the updatedAt property in descending order
       measurements.sort((a: Measurement, b: Measurement) => b.id - a.id);
 
+      setSelectedMeasurement(measurements[0])
       setMeasurements(measurements);
     } catch (error) {
       console.error("Error fetching moderation inputs", error);
     }
   }
 
+  const fetchPatientInfo = async () => {
+    if(ssn === undefined) return;
+
+    try {
+      const patient = await patientService.getPatientBySsn(ssn);
+      setPatientName(patient.name);
+    } catch (error) {
+      console.error("Error fetching moderation inputs", error);
+    }
+  }
+  const getMeasurement = async (id: number) => {
+    try {
+      const measurement = await measurementService.getMeasurementById(id);
+      setSelectedMeasurement(measurement);
+      return measurement;
+    } catch (error) {
+      console.error("Error fetching moderation inputs", error);
+    }
+  }
+
+  const createMeasurement = async (systolic: number, diastolic: number, selectedDate: string, selectedTime: string) => {
+
+    try {
+      const measurement: CreateMeasurementDTO = {
+        systolic: systolic,
+        diastolic: diastolic,
+        date: selectedDate + 'T' + selectedTime + ":00",
+        ssn: ssn
+      };
+      await measurementService.createMeasurement(measurement);
+    } catch (error) {
+      console.error("Error in handleCreateMeasurement: ", error);
+    }
+  };
+
   useEffect(() => {
+    fetchPatientInfo();
     fetchMeasurements();
   }, []);
 
@@ -53,7 +108,7 @@ export const Home: React.FunctionComponent = () => {
                   <img src={PatientLogo} alt={"patientUI"} style={{paddingTop: 4}} width={40}/>
                 </Typography>
                 <Typography variant="h6" sx={{color: "#cecaca"}}>
-                  Marcus Iversen
+                  {patientName}
                   <IconButton onClick={() => console.log("drop down with info + log in")}>
                     <AccountCircleIcon sx={{width: 40, height: 40, color: "rgba(34,34,241,0.66)"}}/>
                   </IconButton>
@@ -77,7 +132,7 @@ export const Home: React.FunctionComponent = () => {
                     </ListItem>
                     {measurements.map((measurement, index) => (
                         <ListItemButton key={measurement.id || index} sx={{borderRadius: 2}} onClick={() => {
-                          console.log(measurement.viewedByDoctor)
+                          getMeasurement(measurement.id);
                         }}>
                           <ListItemText sx={{marginLeft: 1}}
                                         primary={"Blood pressure"}
@@ -98,13 +153,109 @@ export const Home: React.FunctionComponent = () => {
                 minWidth: "72%",
                 height: "85vh"
               }}>
-                <Card sx={{backgroundColor: "#adb5bd", width: "95%", height: "45%", marginLeft: 2, marginTop: 2}}>
-                  <Typography sx={{margin: 2, color: "#212529"}} variant={"h5"} fontWeight={"bold"}>
-                    2024 - 25/4 kl. 12:33
+                <Card sx={{
+                  padding: 2,
+                  backgroundColor: "#adb5bd",
+                  width: "95%",
+                  height: "45%",
+                  marginLeft: 2,
+                  marginTop: 2
+                }}>
+                  <Typography sx={{color: "#212529"}} variant={"h5"} fontWeight={"bold"}>
+                    Blood pressure - {selectedMeasurement?.date.toString()}
                   </Typography>
+                  <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+                    <Box width={"30%"} display={"flex"} flexDirection={"column"}>
+                      <Typography variant="h6" fontWeight={"bold"} color={"#2f2fd3"} sx={{paddingTop: 2}}>
+                        Systolic pressure:
+                      </Typography>
+                      <Typography variant="h6" fontWeight={"bolder"} color={"#000000"} sx={{paddingTop: 2}}>
+                        {selectedMeasurement?.systolic}
+                      </Typography>
+                      <Typography variant="h6" fontWeight={"bold"} color={"#2f2fd3"} sx={{paddingTop: 2}}>
+                        Diastolic pressure:
+                      </Typography>
+                      <Typography variant="h6" fontWeight={"bolder"} color={"#000000"} sx={{paddingTop: 2}}>
+                        {selectedMeasurement?.diastolic}
+                      </Typography>
+                      <Typography sx={{paddingBottom: 2}}/>
+                      <Typography variant={"subtitle2"}>
+                        {selectedMeasurement?.viewedByDoctor ?
+                            "- Reviewed by doctor" :
+                            "- Not reviewed by doctor"}
+                      </Typography>
+                    </Box>
+                    <Box width={"70%"} display={"flex"} flexDirection={"column"} justifyContent={"flex-end"}
+                         alignItems={"flex-end"}>
+                      <img src={PressureChart} alt={"blood pressure chart"} style={{maxWidth: 450}}/>
+                    </Box>
+                  </Box>
                 </Card>
                 <Card
-                    sx={{backgroundColor: "#adb5bd", width: "95%", height: "40%", marginLeft: 2, marginTop: 2}}></Card>
+                    sx={{backgroundColor: "#adb5bd", width: "95%", height: "40%", marginLeft: 2, marginTop: 2}}>
+                  <Card sx={{
+                    padding: 2,
+                    boxShadow: 0,
+                    backgroundColor: "transparent",
+                    width: "95%",
+                  }}>
+                    <Typography variant={"h5"} fontWeight={"bolder"}>Blood Pressure - Create New
+                      Measurement</Typography>
+                    <Box display={"flex"} flexDirection={"row"} sx={{height: "100%"}}>
+                      <Box display={"flex"} flexDirection={"column"} sx={{marginTop: 2}}>
+                        <Typography variant={"subtitle1"} fontWeight={"bold"} color={"#2f2fd3"}>Systolic
+                          pressure:</Typography>
+                        <TextField
+                            id="systolic"
+                            placeholder={"Ex: 120"}
+                            variant="outlined"
+                            onBlur={(e) => setSystolic(e.target.value)}
+                            sx={{marginBottom: 2}}/>
+                        <Typography variant={"subtitle1"} fontWeight={"bold"} color={"#2f2fd3"}>Diastolic
+                          pressure:</Typography>
+                        <TextField
+                            id="diastolic"
+                            placeholder={"Ex: 80"}
+                            variant="outlined"
+                            onBlur={(e) => setDiastolic(e.target.value)}
+                        />
+                      </Box>
+                      <Box display={"flex"} flexDirection={"column"} sx={{marginTop: 2, marginLeft: 4}}>
+                        <Typography variant={"subtitle1"} fontWeight={"bold"} color={"#2f2fd3"}>Date of
+                          measurement: </Typography>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+
+                              sx={{marginBottom: 2}}
+                              onChange={(newValue) => {
+                                if (newValue) {
+                                  setSelectedDate(newValue.format('YYYY-MM-DD'))
+                                }
+                              }}
+                          />
+                        </LocalizationProvider>
+                        <Typography variant={"subtitle1"} fontWeight={"bold"} color={"#2f2fd3"}>Date of
+                          measurement: </Typography>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <TimePicker sx={{marginBottom: 2}} onChange={(newValue) => {
+                            if (newValue) {
+                              setSelectedTime(newValue.format('HH:mm'))
+                            } else {
+                              setSelectedTime(Date.now().toString())
+                            }
+                          }}/>
+                        </LocalizationProvider>
+                      </Box>
+                      <Box display={"flex"} flexDirection={"row"} alignItems={"flex-end"} justifyContent={"flex-end"}
+                           sx={{marginTop: 2, marginLeft: 4, marginBottom: 2.5}}>
+                        <Button variant="contained" sx={{backgroundColor: "#2f2fd3", width: 250}} onClick={() => {
+                          createMeasurement(parseInt(systolic), parseInt(diastolic), selectedDate, selectedTime);
+                          window.location.reload();
+                        }}>Create Measurement</Button>
+                      </Box>
+                    </Box>
+                  </Card>
+                </Card>
               </Card>
             </Box>
           </Card>

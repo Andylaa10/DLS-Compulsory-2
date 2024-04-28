@@ -16,9 +16,19 @@ export class MeasurementService {
     }
   }
 
+  async getMeasurementById(id: number) {
+    try {
+      const response = await this.api.get(`/measurement/GetMeasurement/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error in getMeasurementById: ", error);
+      throw error;
+    }
+  }
+
   async createMeasurement(measurement: CreateMeasurementDTO) {
     try {
-      const response = await this.api.post('/CreateMeasurement', measurement);
+      const response = await this.api.post('/measurement/CreateMeasurement', measurement);
       return response.data;
     } catch (error) {
       console.error("Error in createMeasurement: ", error);

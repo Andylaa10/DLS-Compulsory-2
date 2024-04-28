@@ -1,6 +1,6 @@
 export interface CreateMeasurementDTO{
-  date: Date;
+  date: string;
   systolic: number;
   diastolic: number;
-  ssn: string;
+  ssn: string | undefined;
 }
