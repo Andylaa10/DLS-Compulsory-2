@@ -1,4 +1,5 @@
 using System.Diagnostics.Metrics;
+using OpenTelemetry.Trace;
 
 namespace MeasurementService.Test;
 
@@ -31,7 +32,9 @@ public class MeasurementApiTest
         mockService.Setup(service => service.CreateMeasurement(It.IsAny<CreateMeasurementDto>()))  
             .ReturnsAsync(expectedMeasurement);
 
-        var controller = new MeasurementController(mockService.Object);  
+        var tracer = TracerProvider.Default.GetTracer("serviceName");
+
+        var controller = new MeasurementController(mockService.Object, tracer);  
   
         // Act    
         var result = await controller.CreateMeasurement(dto);  
@@ -54,9 +57,11 @@ public class MeasurementApiTest
         };
     
         var mockService = new Mock<IMeasurementService>();  
-        mockService.Setup(service => service.UpdateMeasurement(measurementId, updateMeasurementDto)).ReturnsAsync(new Measurement());  
-    
-        var controller = new MeasurementController(mockService.Object);
+        mockService.Setup(service => service.UpdateMeasurement(measurementId, updateMeasurementDto)).ReturnsAsync(new Measurement());
+
+        var tracer = TracerProvider.Default.GetTracer("serviceName");
+        
+        var controller = new MeasurementController(mockService.Object, tracer);  
 
         // Act  
         var result = await controller.UpdateMeasurement(measurementId, updateMeasurementDto);  
@@ -65,5 +70,4 @@ public class MeasurementApiTest
         var okResult = Assert.IsType<OkObjectResult>(result);  
         Assert.Equal(200, okResult.StatusCode);  
     }
-
 }
