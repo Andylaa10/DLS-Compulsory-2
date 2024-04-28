@@ -1,4 +1,7 @@
 ﻿using Cache;
+using EasyNetQ;
+using FeatureHub;
+using Messaging;
 using Monitoring;
 using OpenTelemetry.Trace;
 using PatientService.Core.Helper;
@@ -12,21 +15,23 @@ public static class DependencyInjectionConfig
 {
     public static void ConfigureDependencyInjection(this IServiceCollection services)
     {
+        //Messaging
+        services.AddSingleton(new MessageClient(RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest")));
+        
         //Database 
         services.AddDbContext<PatientDbContext>();
         
         //DI
         services.AddScoped<IPatientRepository, PatientRepository>();
         services.AddScoped<IPatientService, Core.Services.PatientService>();
-
+        
         //Automapper
         services.AddSingleton(AutoMapperConfig.ConfigureAutomapper());
         
-        //Tracing
-        services.AddOpenTelemetry().Setup();
-        services.AddSingleton(TracerProvider.Default.GetTracer("MyTracer"));
-        
         //Caching
         services.AddSingleton(RedisClientFactory.CreateRedisClient());
+        
+        //FeatureHub
+        services.AddSingleton(FeatureHubFactory.CreateFeatureHub());
     }
 }

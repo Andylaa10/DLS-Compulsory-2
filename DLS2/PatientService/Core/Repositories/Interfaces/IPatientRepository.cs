@@ -10,7 +10,7 @@ public interface IPatientRepository
     public Task<PaginationResult<Patient>> GetAllPatientsWithPagination(int pageNumber, int pageSize);
     public Task<Patient> GetPatientBySsn(string ssn);
     
-    public Task DeletePatient(string ssn);
+    public Task<Patient> DeletePatient(string ssn);
 
     public Task<Patient> CreatePatient(Patient patient);
     

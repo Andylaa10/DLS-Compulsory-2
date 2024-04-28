@@ -73,3 +73,15 @@
   background-color: #00000033;
 }
 
+.delete-button:hover {
+  cursor: pointer !important;
+  color: #FF0000FF;
+}
+
+.add-btn-placement {
+  margin-bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end
+}
+

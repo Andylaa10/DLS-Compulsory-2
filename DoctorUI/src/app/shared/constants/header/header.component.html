@@ -2,4 +2,8 @@
   <div>
     <img src="assets/img/doctor.jpg" alt="logo">
   </div>
+  <div class="change-country-content">
+    <p [hidden]="countryStore.$country().name === ''">You have chosen: {{countryStore.$country().name}}</p>
+    <button mat-button color="accent" [hidden]="countryStore.$country().name === ''" (click)="changeCountry()">Change country</button>
+  </div>
 </div>

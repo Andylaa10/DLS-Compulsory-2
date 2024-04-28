@@ -1,3 +1,5 @@
+using System.Diagnostics.Metrics;
+
 namespace MeasurementService.Test;
 
 public class MeasurementApiTest
@@ -50,17 +52,18 @@ public class MeasurementApiTest
         {  
             ViewedByDoctor = true
         };
-        
+    
         var mockService = new Mock<IMeasurementService>();  
-        mockService.Setup(service => service.UpdateMeasurement(measurementId, updateMeasurementDto)).Returns(Task.CompletedTask);  
-        
+        mockService.Setup(service => service.UpdateMeasurement(measurementId, updateMeasurementDto)).ReturnsAsync(new Measurement());  
+    
         var controller = new MeasurementController(mockService.Object);
-  
+
         // Act  
         var result = await controller.UpdateMeasurement(measurementId, updateMeasurementDto);  
-  
+
         // Assert  
-        var okResult = Assert.IsType<OkResult>(result);  
+        var okResult = Assert.IsType<OkObjectResult>(result);  
         Assert.Equal(200, okResult.StatusCode);  
     }
+
 }

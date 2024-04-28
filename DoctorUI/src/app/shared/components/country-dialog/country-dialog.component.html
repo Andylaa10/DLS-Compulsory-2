@@ -1,0 +1,24 @@
+<div class="content">
+
+  <h3>Where are you from?</h3>
+  <mat-form-field appearance="outline" class="example-full-width">
+    <mat-label>Country</mat-label>
+    <div class="form-field-content">
+      <input type="text"
+             matInput
+             [matAutocomplete]="auto"
+             [formControl]="countryControl"
+      >
+      @if(countryControl.value){
+      <mat-icon (click)="clearCountry()" class="clear-btn">clear</mat-icon>
+      }
+    </div>
+    <mat-autocomplete #auto="matAutocomplete">
+      @for (country of countries; track $index) {
+      <mat-option [value]="country.name">{{country.name}}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <button class="save-btn" [disabled]="countryControl.invalid" mat-raised-button color="primary" (click)="saveCountry()">Save</button>
+</div>

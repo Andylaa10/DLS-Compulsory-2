@@ -44,7 +44,9 @@ public class MeasurementRepository : IMeasurementRepository
 
     public async Task<Measurement> GetMeasurementById(int id)
     {
-    return await _context.Measurements.Where(m => m.Id == id).FirstOrDefaultAsync();
+        var measurement = await _context.Measurements.FirstOrDefaultAsync(m => m.Id == id) ??
+                          throw new NullReferenceException();
+        return measurement;
     }
 
     public async Task<Measurement> CreateMeasurement(Measurement measurement)
@@ -54,27 +56,41 @@ public class MeasurementRepository : IMeasurementRepository
         return measurement;
     }
 
-    public async Task DeleteMeasurement(int id)
+    public async Task<Measurement> DeleteMeasurement(int id)
     {
         var measurement = await _context.Measurements.FirstOrDefaultAsync(m => m.Id == id) ??
                           throw new NullReferenceException();
         _context.Measurements.Remove(measurement);
         await _context.SaveChangesAsync();
+        return measurement;
     }
 
-    public async Task UpdateMeasurement(int id, Measurement measurement)
+    public async Task<Measurement> UpdateMeasurement(int id, Measurement measurement)
     {
         var measurementToUpdate = await _context.Measurements.FirstOrDefaultAsync(m => m.Id == id) ??
                                   throw new NullReferenceException();
 
         if (measurement.Id != id) throw new ArgumentException("Id in the route does not match with measurement id");
-        
+
         measurementToUpdate.ViewedByDoctor = measurement.ViewedByDoctor;
         measurementToUpdate.Diastolic = measurement.Diastolic;
         measurementToUpdate.Systolic = measurement.Systolic;
 
         _context.Update(measurementToUpdate);
         await _context.SaveChangesAsync();
+
+        return measurementToUpdate;
+    }
+
+    public async Task DeleteMeasurementsOnPatient(string ssn)
+    {
+        var measurements = await _context.Measurements.Where(m => m.SSN == ssn).ToListAsync();
+        if (measurements.Count > 0)
+        {
+            Console.WriteLine(measurements.Count);
+            _context.Measurements.RemoveRange(measurements);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task RebuildDatabase()

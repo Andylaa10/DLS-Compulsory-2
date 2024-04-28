@@ -14,9 +14,7 @@ public class PatientDbContext : DbContext
     {
         #region Setup DB
         //Auto generate id
-        modelBuilder.Entity<Patient>()
-            .Property(p => p.Id)
-            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<Patient>().HasKey(p => p.SSN);
 
         modelBuilder.Entity<Patient>().HasIndex(p => p.SSN).IsUnique();
         modelBuilder.Entity<Patient>().HasIndex(p => p.Email).IsUnique();

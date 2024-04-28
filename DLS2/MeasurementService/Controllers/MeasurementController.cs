@@ -1,6 +1,8 @@
 using MeasurementService.Core.Services.DTOs;
 using MeasurementService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Monitoring;
+using OpenTelemetry.Trace;
 
 namespace MeasurementService.Controllers;
 
@@ -9,10 +11,13 @@ namespace MeasurementService.Controllers;
 public class MeasurementController : ControllerBase
 {
     private readonly IMeasurementService _measurementService;
+    private readonly Tracer _tracer;
 
-    public MeasurementController(IMeasurementService measurementService)
+
+    public MeasurementController(IMeasurementService measurementService, Tracer tracer)
     {
         _measurementService = measurementService;
+        _tracer = tracer;
     }
 
 
@@ -20,6 +25,10 @@ public class MeasurementController : ControllerBase
     [Route("{ssn}")]
     public async Task<IActionResult> GetAllMeasurementsBySsn([FromRoute] string ssn)
     {
+        using var activity = _tracer.StartActiveSpan("GetAllMeasurementsBySsn");
+
+        LoggingService.Log.Information("Called GetAllMeasurementsBySsn function");
+
         try
         {
             return Ok(await _measurementService.GetAllMeasurementsBySsn(ssn));
@@ -32,12 +41,17 @@ public class MeasurementController : ControllerBase
 
     [HttpGet]
     [Route("GetMeasurementPage")]
-    public async Task<IActionResult> GetAllMeasurementsBySsnPaginated([FromRoute] string ssn, [FromQuery] PaginationRequestDto dto)
+    public async Task<IActionResult> GetAllMeasurementsBySsnPaginated([FromRoute] string ssn,
+        [FromQuery] PaginationRequestDto dto)
     {
+        using var activity = _tracer.StartActiveSpan("GetAllMeasurementsBySsnPaginated");
+
+        LoggingService.Log.Information("Called GetAllMeasurementsBySsnPaginated function");
+
         try
         {
-           var result = await _measurementService.GetAllMeasurementsBySsnPaginated(ssn, dto.PageNumber, dto.PageSize);
-            
+            var result = await _measurementService.GetAllMeasurementsBySsnPaginated(ssn, dto.PageNumber, dto.PageSize);
+
             Response.Headers.Add("X-Total-Count", result.TotalCount.ToString());
 
             return Ok(result);
@@ -67,6 +81,9 @@ public class MeasurementController : ControllerBase
     [Route("CreateMeasurement")]
     public async Task<IActionResult> CreateMeasurement([FromBody] CreateMeasurementDto measurement)
     {
+        using var activity = _tracer.StartActiveSpan("CreateMeasurement");
+
+        LoggingService.Log.Information("Called CreateMeasurement function");
         try
         {
             return StatusCode(201, await _measurementService.CreateMeasurement(measurement));
@@ -81,10 +98,12 @@ public class MeasurementController : ControllerBase
     [Route("DeleteMeasurement/{id}")]
     public async Task<IActionResult> DeleteMeasurement([FromRoute] int id)
     {
+        using var activity = _tracer.StartActiveSpan("DeleteMeasurement");
+
+        LoggingService.Log.Information("Called DeleteMeasurement function");
         try
         {
-            await _measurementService.DeleteMeasurement(id);
-            return Ok();
+            return Ok(await _measurementService.DeleteMeasurement(id));
         }
         catch (Exception e)
         {
@@ -97,10 +116,13 @@ public class MeasurementController : ControllerBase
     [Route("UpdateMeasurement/{id}")]
     public async Task<IActionResult> UpdateMeasurement([FromRoute] int id, [FromBody] UpdateMeasurementDto dto)
     {
+        using var activity = _tracer.StartActiveSpan("UpdateMeasurement");
+
+        LoggingService.Log.Information("Called UpdateMeasurement function");
+
         try
         {
-            await _measurementService.UpdateMeasurement(id, dto);
-            return Ok();
+            return Ok(await _measurementService.UpdateMeasurement(id, dto));
         }
         catch (Exception e)
         {
@@ -112,6 +134,11 @@ public class MeasurementController : ControllerBase
     [Route("RebuildDb")]
     public async Task<IActionResult> RebuildDatabase()
     {
+        using var activity = _tracer.StartActiveSpan("RebuildDatabase");
+
+
+        LoggingService.Log.Information("Called RebuildDatabase function");
+
         try
         {
             await _measurementService.RebuildDatabase();

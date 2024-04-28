@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Cache;
+using Messaging;
+using Messaging.SharedMessages;
 using Monitoring;
 using OpenTelemetry.Trace;
 using PatientService.Core.Entities;
@@ -12,80 +14,64 @@ namespace PatientService.Core.Services;
 public class PatientService : IPatientService
 {
     private readonly IPatientRepository _patientRepository;
-    private readonly Tracer _tracer;
     private readonly IMapper _mapper;
     private readonly RedisClient _redisClient;
+    private readonly MessageClient _messageClient;
 
-    public PatientService(IPatientRepository patientRepository, Tracer tracer, IMapper mapper, RedisClient redisClient)
+
+    public PatientService(IPatientRepository patientRepository, IMapper mapper, RedisClient redisClient, MessageClient messageClient)
     {
         _patientRepository = patientRepository;
-        _tracer = tracer;
         _mapper = mapper;
         _redisClient = redisClient;
+        _messageClient = messageClient;
         _redisClient.Connect();
     }
 
     public async Task<IEnumerable<Patient>> GetAllPatients()
     {
-        using var activity = _tracer.StartActiveSpan("GetAllPatients");
-
-        Logging.Log.Information("Called GetAllPatients function");
-
         return await _patientRepository.GetAllPatients();
     }
 
     public async Task<PaginationResult<Patient>> SearchPatients(SearchDto dto)
     {
-        using var activity = _tracer.StartActiveSpan("SearchPatient");
-
-        Logging.Log.Information("Called SearchPatient function");
-
         return await _patientRepository.SearchPatients(dto.SearchTerm, dto.PageNumber, dto.PageSize);
     }
 
     public async Task<PaginationResult<Patient>> GetAllPatientsWithPagination(PaginationRequestDto dto)
     {
-        using var activity = _tracer.StartActiveSpan("GetAllPatientsWithPagination");
-
-        Logging.Log.Information("Called GetAllPatientsWithPagination function");
-
         return await _patientRepository.GetAllPatientsWithPagination(dto.PageNumber, dto.PageSize);
     }
 
 
     public async Task<Patient> GetPatientBySsn(string ssn)
     {
-        using var activity = _tracer.StartActiveSpan("GetPatientBySsn");
-
-        Logging.Log.Information("Called GetPatientBySsn function");
-
+        //Try to get from the cache first
+        var patientJson = _redisClient.GetValue(ssn);
+        if (!string.IsNullOrEmpty(patientJson))
+            return await Task.FromResult(_redisClient.DeserializeObject<Patient>(patientJson)!);
+        
         return await _patientRepository.GetPatientBySsn(ssn);
     }
 
-    public async Task DeletePatient(string ssn)
+    public async Task<Patient> DeletePatient(string ssn)
     {
-        using var activity = _tracer.StartActiveSpan("DeletePatient");
-
-        Logging.Log.Information("Called DeletePatient function");
-
-        await _patientRepository.DeletePatient(ssn);
+        await _messageClient.Send(new DeletePatientMessage("Delete Patient", ssn), "DeletePatient");
+        var patient = await _patientRepository.DeletePatient(ssn);
+        return patient;
     }
 
-    public async Task<Patient> CreatePatient(CreatePatientDto patient)
+    public async Task<Patient> CreatePatient(CreatePatientDto dto)
     {
-        using var activity = _tracer.StartActiveSpan("CreatePatient");
-
-        Logging.Log.Information("Called CreatePatient function");
-
-        return await _patientRepository.CreatePatient(_mapper.Map<Patient>(patient));
+        var patient = await _patientRepository.CreatePatient(_mapper.Map<Patient>(dto));
+        var patientJson = _redisClient.SerializeObject(patient);
+        
+        _redisClient.StoreValue(patient.SSN, patientJson);
+        return patient;
     }
 
     public async Task RebuildDatabase()
     {
-        using var activity = _tracer.StartActiveSpan("RebuildDatabase");
-
-        Logging.Log.Information("Called RebuildDatabase function");
-
         await _patientRepository.RebuildDatabase();
     }
 }

@@ -1,5 +1,8 @@
+using FeatureHub;
 using Microsoft.AspNetCore.Mvc;
-using PatientService.Core.Entities;
+using Microsoft.IdentityModel.Tokens;
+using Monitoring;
+using OpenTelemetry.Trace;
 using PatientService.Core.Services.DTOs;
 using PatientService.Core.Services.Interfaces;
 
@@ -10,15 +13,24 @@ namespace PatientService.Controllers;
 public class PatientController : ControllerBase
 {
     private readonly IPatientService _patientService;
+    private readonly FeatureHubClient _featureHubClient;
+    private readonly Tracer _tracer;
 
-    public PatientController(IPatientService patientService)
+
+    public PatientController(IPatientService patientService, FeatureHubClient featureHubClient, Tracer tracer)
     {
         _patientService = patientService;
+        _featureHubClient = featureHubClient;
+        _tracer = tracer;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllPatients()
     {
+        using var activity = _tracer.StartActiveSpan("GetAllPatients");
+
+        LoggingService.Log.Information("Called GetAllPatients function");
+
         try
         {
             return Ok(await _patientService.GetAllPatients());
@@ -33,6 +45,10 @@ public class PatientController : ControllerBase
     [Route("SearchPatients")]
     public async Task<IActionResult> SearchPatients([FromQuery] SearchDto dto)
     {
+        using var activity = _tracer.StartActiveSpan("SearchPatient");
+
+        LoggingService.Log.Information("Called SearchPatient function");
+
         try
         {
             var patients = await _patientService.SearchPatients(dto);
@@ -51,6 +67,10 @@ public class PatientController : ControllerBase
     [Route("GetPatientPage")]
     public async Task<IActionResult> GetAllPatientsPage([FromQuery] PaginationRequestDto dto)
     {
+        using var activity = _tracer.StartActiveSpan("GetAllPatientsWithPagination");
+
+        LoggingService.Log.Information("Called GetAllPatientsWithPagination function");
+
         try
         {
             var patients = await _patientService.GetAllPatientsWithPagination(dto);
@@ -69,6 +89,10 @@ public class PatientController : ControllerBase
     [Route("{ssn}")]
     public async Task<IActionResult> GetPatientBySsn([FromRoute] string ssn)
     {
+        using var activity = _tracer.StartActiveSpan("GetPatientBySsn");
+
+        LoggingService.Log.Information("Called GetPatientBySsn function");
+
         try
         {
             return Ok(await _patientService.GetPatientBySsn(ssn));
@@ -83,8 +107,19 @@ public class PatientController : ControllerBase
     [Route("CreatePatient")]
     public async Task<IActionResult> AddPatient([FromBody] CreatePatientDto patient)
     {
+        using var activity = _tracer.StartActiveSpan("CreatePatient");
+
+        LoggingService.Log.Information("Called CreatePatient function");
+
         try
         {
+            var country = HttpContext.Request.Headers["country"];
+            if (country.IsNullOrEmpty()) return BadRequest("No country provided");
+
+            var feature = await _featureHubClient.IsCountryAllowed(country);
+
+            if (!feature) return StatusCode(403, $"Method not allowed in {country}");
+
             return StatusCode(201, await _patientService.CreatePatient(patient));
         }
         catch (Exception e)
@@ -97,10 +132,20 @@ public class PatientController : ControllerBase
     [Route("DeletePatient/{ssn}")]
     public async Task<IActionResult> DeletePatient([FromRoute] string ssn)
     {
+        using var activity = _tracer.StartActiveSpan("DeletePatient");
+
+        LoggingService.Log.Information("Called DeletePatient function");
         try
         {
-            await _patientService.DeletePatient(ssn);
-            return Ok();
+            var country = HttpContext.Request.Headers["country"];
+            if (country.IsNullOrEmpty()) return BadRequest("No country provided");
+
+            var feature = await _featureHubClient.IsCountryAllowed(country);
+
+            if (!feature) return StatusCode(403, $"Method not allowed in {country}");
+
+
+            return Ok(await _patientService.DeletePatient(ssn));
         }
         catch (Exception e)
         {
@@ -112,6 +157,10 @@ public class PatientController : ControllerBase
     [Route("RebuildDb")]
     public async Task<IActionResult> RebuildDatabase()
     {
+        using var activity = _tracer.StartActiveSpan("RebuildDatabase");
+
+        LoggingService.Log.Information("Called RebuildDatabase function");
+
         try
         {
             await _patientService.RebuildDatabase();

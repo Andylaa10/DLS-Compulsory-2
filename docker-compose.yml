@@ -1,5 +1,19 @@
-version: '3.8'
+version: '3.9'
+
 services:
+#Messaging
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
 #Cache
   redis:
     image: 'redislabs/redisearch:latest'
@@ -32,43 +46,37 @@ services:
       - "1434:1433"
     volumes:
       - mssql_data_measurement_db:/var/opt/mssql
+  
+#Feature flags
+  featurehub:
+    image: featurehub/party-server:latest
+    restart: always
+    volumes:
+      - featurehub-h2-data:/db
+    ports:
+      - 8085:8085
 
 #Monitoring
   seq:
     image: datalust/seq:latest
     ports:
-      - "5345:80"
+      - "5341:5341"
+      - "5342:80"
     volumes:
       - seq_data:/data
-    networks:
-      - local_network
     environment:
       ACCEPT_EULA: "Y"
-
-  zipkin-storage:
-    image: openzipkin/zipkin-mysql
-    ports:
-      - "3306:3306"
-    volumes:
-      - zipkin_data:/mysql/data
-    networks:
-      - local_network
 
   zipkin:
     image: openzipkin/zipkin
     ports:
       - "9411:9411"
-    environment:
-      - STORAGE_TYPE=mysql
-      - MYSQL_HOST=zipkin-storage
-      - MYSQL_USER=zipkin
-      - MYSQL_PASS=zipkin
     depends_on:
-      - zipkin-storage
-    networks:
-      - local_network
-
-#APIS
+      - patient-service
+      - measurement-service
+      - seq
+  
+  #APIS
   apigateway:
     image: apigateway
     build:
@@ -92,6 +100,7 @@ services:
       apigateway:
         condition: service_started
 
+
   patient-service:
     image: patientservice
     build:
@@ -106,7 +115,9 @@ services:
         condition: service_started
       apigateway:
         condition: service_started
-
+      featurehub:
+        condition: service_started
+      
 #Frontend
   doctor-ui:
     ports:
@@ -137,9 +148,10 @@ services:
 
 volumes:
   seq_data:
-  zipkin_data:
   mssql_data_measurement_db:
   mssql_data_patient_db:
+  featurehub-h2-data:
+    
 networks:
   local_network:
     driver: bridge
