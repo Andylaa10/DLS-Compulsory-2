@@ -62,6 +62,20 @@ public class MeasurementController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("GetMeasurement/{id}")]
+    public async Task<IActionResult> GetMeasurementById([FromRoute] int id)
+    {
+        try
+        {
+            return Ok(await _measurementService.GetMeasurementById(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
 
     [HttpPost]
     [Route("CreateMeasurement")]

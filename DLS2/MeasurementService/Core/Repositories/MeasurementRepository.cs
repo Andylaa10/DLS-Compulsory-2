@@ -71,7 +71,7 @@ public class MeasurementRepository : IMeasurementRepository
                                   throw new NullReferenceException();
 
         if (measurement.Id != id) throw new ArgumentException("Id in the route does not match with measurement id");
-        
+
         measurementToUpdate.ViewedByDoctor = measurement.ViewedByDoctor;
         measurementToUpdate.Diastolic = measurement.Diastolic;
         measurementToUpdate.Systolic = measurement.Systolic;
