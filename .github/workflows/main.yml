@@ -101,7 +101,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/doctorui:latest
 
-      - name: Build and push DoctorUI image
+      - name: Build and push PatientUI image
         uses: docker/build-push-action@v5
         with:
           file: ././PatientUI/Dockerfile
