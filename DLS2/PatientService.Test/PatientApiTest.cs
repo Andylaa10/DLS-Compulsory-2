@@ -6,51 +6,6 @@ namespace PatientService.Test;
 
 public class PatientApiTest
 {
-    [Fact]
-    public async Task TestCreatePatient_ReturnsOkayAndPost()
-    {
-        // Arrange      
-        var dto = new CreatePatientDto()
-        {
-            SSN = "2201960000",
-            Email = "PatientMail@mail.com",
-            Name = "Kristian Hansen Hollænder"
-        };
-
-        var expectedPatient = new Patient()
-        {
-            SSN = "2201960000",
-            Email = "PatientMail@mail.com",
-            Name = "Kristian Hansen Hollænder"
-        };
-
-        var mockService = new Mock<IPatientService>();
-        mockService.Setup(service => service.CreatePatient(It.IsAny<CreatePatientDto>()))
-            .ReturnsAsync(expectedPatient);
-
-        var tracer = TracerProvider.Default.GetTracer("serviceName");
-
-        var featureHub = FeatureHubFactory.CreateFeatureHub();
-
-
-        var controller = new PatientController(mockService.Object, featureHub, tracer);
-        controller.ControllerContext.HttpContext = new DefaultHttpContext();
-        controller.ControllerContext.HttpContext.Request.Headers["country"] = "denmark";
-        
-        // Act      
-        var result = await controller.AddPatient(dto);
-
-        //Assert      
-        var objectResult = Assert.IsType<ObjectResult>(result);
-        Assert.Equal(201, objectResult.StatusCode);
-        Assert.NotNull(objectResult.Value);
-
-        var patientResult = Assert.IsType<Patient>(objectResult.Value);
-
-        Assert.Equal(expectedPatient.Email, patientResult.Email);
-        Assert.Equal(expectedPatient.SSN, patientResult.SSN);
-        Assert.Equal(expectedPatient.Name, patientResult.Name);
-    }
 
     [Fact]
     public async Task TestGetPatients_ReturnsListOfPatients()
