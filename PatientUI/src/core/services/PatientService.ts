@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export class PatientService{
   api = axios.create({
-    baseURL: 'http://localhost:9092/api'
+    baseURL: 'http://localhost:5206/api'
   })
 
   async getPatientBySsn(ssn: string) {

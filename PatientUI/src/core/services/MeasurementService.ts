@@ -3,7 +3,7 @@ import axios from "axios";
 
 export class MeasurementService {
   api = axios.create({
-    baseURL: 'http://localhost:9090/api'
+    baseURL: 'http://localhost:5206/api'
   })
 
   async getMeasurementsBySSN(ssn: string | undefined) {
