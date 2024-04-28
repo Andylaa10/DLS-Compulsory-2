@@ -27,7 +27,7 @@ public static class DependencyInjectionConfig
         services.AddSingleton(RedisClientFactory.CreateRedisClient());
         
         //Monitoring
-        var serviceName = "PatientService";
+        var serviceName = "MeasurementService";
         var serviceVersion = "1.0.0";
         services.AddOpenTelemetry().Setup(serviceName, serviceVersion);
         services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
